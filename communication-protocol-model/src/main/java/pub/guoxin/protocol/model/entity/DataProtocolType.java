@@ -14,12 +14,12 @@ public class DataProtocolType extends BaseDataProtocol<Class<?>> implements Seri
 
     private String description;
 
-    public DataProtocolType(int index, Class<?> value, String description) {
+    public DataProtocolType(short index, Class<?> value, String description) {
         super(index, value);
         this.description = description;
     }
 
-    public static DataProtocolType create(int index, Class<?> value, String description) {
+    public static DataProtocolType create(short index, Class<?> value, String description) {
         return new DataProtocolType(index, value, description);
     }
 }

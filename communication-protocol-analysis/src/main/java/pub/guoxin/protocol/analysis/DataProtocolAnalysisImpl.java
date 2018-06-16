@@ -75,11 +75,11 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
             CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
             TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
 
-            int codeIndex = codeIndexAnnotation.index();
-            int typeIndex = typeIndexAnnotation.index();
+            short codeIndex = codeIndexAnnotation.index();
+            short typeIndex = typeIndexAnnotation.index();
             for (DataProtocolPacket packet : packets) {
-                int packetCodeIndex = packet.getCode().getIndex();
-                int packetTypeIndex = packet.getType().getIndex();
+                short packetCodeIndex = packet.getCode().getIndex();
+                short packetTypeIndex = packet.getType().getIndex();
                 if (codeIndex == packetCodeIndex && typeIndex == packetTypeIndex) {
                     declaredField.setAccessible(true);
                     try {
@@ -140,16 +140,16 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
         DataProtocolType dataProtocolType = dataProtocolPacket.getType();
         Class<?>         clazz            = dataProtocolType.getValue();
 
-        int      dataCodeIndex = dataProtocolPacket.getCode().getIndex();
-        int      dataTypeIndex = dataProtocolPacket.getType().getIndex();
+        short    dataCodeIndex = dataProtocolPacket.getCode().getIndex();
+        short    dataTypeIndex = dataProtocolPacket.getType().getIndex();
         Class<?> dataTypeValue = dataProtocolPacket.getType().getValue();
 
         for (Field declaredField : clazz.getDeclaredFields()) {
             CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
             TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
 
-            int codeIndex = codeIndexAnnotation.index();
-            int typeIndex = typeIndexAnnotation.index();
+            short codeIndex = codeIndexAnnotation.index();
+            short typeIndex = typeIndexAnnotation.index();
 
             if (codeIndex == dataCodeIndex && typeIndex == dataTypeIndex) {
                 Object fieldValue = HexConvertUtils.getFieldValue(dataTypeValue, hexString);
@@ -167,16 +167,16 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
         for (DataProtocol<ProtocolEntity> dataProtocol : dataProtocols) {
             DataProtocolHeader header = dataProtocol.getHeader();
             boolean            flag;
-            int                commandCode;
-            int                version;
+            short              commandCode;
+            short              version;
             {
                 String hexString = BytesUtils.subStringByIndex(data, Header.COMMAND_START, Header.COMMAND_END);
-                commandCode = HexConvertUtils.hexString2Int(hexString);
+                commandCode = HexConvertUtils.hexString2Short(hexString);
                 flag = header.getCommand().getIndex() == commandCode;
             }
             {
                 String hexString = BytesUtils.subStringByIndex(data, Header.VERSION_START, Header.VERSION_END);
-                version = HexConvertUtils.hexString2Int(hexString);
+                version = HexConvertUtils.hexString2Short(hexString);
                 flag = flag && header.getVersion() == version;
             }
             if (flag) {
@@ -190,7 +190,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
     private void analysisHeader(String data, DataProtocolHeader header) throws DecoderException {
         {
             String hexString   = BytesUtils.subStringByIndex(data, Header.COMMAND_START, Header.COMMAND_END);
-            int    commandCode = HexConvertUtils.hexString2Int(hexString);
+            short  commandCode = HexConvertUtils.hexString2Short(hexString);
             // 没事闲的在验证一遍
             if (header.getCommand().getIndex() == commandCode) {
                 throw new ProtocolNotFoundException("二次验证 command 失败");
@@ -198,7 +198,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
         }
         {
             String hexString = BytesUtils.subStringByIndex(data, Header.VERSION_START, Header.VERSION_END);
-            int    version   = HexConvertUtils.hexString2Int(hexString);
+            short  version   = HexConvertUtils.hexString2Short(hexString);
             // 没事闲的在验证一遍
             if (header.getVersion() == version) {
                 throw new ProtocolNotFoundException("二次验证 version 失败");
@@ -206,7 +206,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
         }
         {
             String hexString   = BytesUtils.subStringByIndex(data, Header.TOTAL_PACKET_START, Header.TOTAL_PACKET_END);
-            int    totalPacket = HexConvertUtils.hexString2Int(hexString);
+            short  totalPacket = HexConvertUtils.hexString2Short(hexString);
             header.setTotalPacket(totalPacket);
         }
     }

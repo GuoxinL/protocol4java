@@ -21,8 +21,8 @@ public interface ProtocolEntity {
 
 
     static DataProtocol toDataProtocol(ProtocolEntity protocolEntity) {
-        Class<? extends ProtocolEntity> clazz = protocolEntity.getClass();
-        Protocol protocolAnnotation = clazz.getAnnotation(Protocol.class);
+        Class<? extends ProtocolEntity> clazz              = protocolEntity.getClass();
+        Protocol                        protocolAnnotation = clazz.getAnnotation(Protocol.class);
         if (Objects.isNull(protocolAnnotation)) {
             return null;
         }
@@ -55,8 +55,8 @@ public interface ProtocolEntity {
      * @return 协议头配置
      */
     static DataProtocolHeader getDataProtocolHeader(Protocol protocolAnnotation, Class<? extends ProtocolEntity> clazz) {
-        int                                          commandIndex = protocolAnnotation.commandIndex();
-        int                                          version      = protocolAnnotation.version();
+        short                                        commandIndex = protocolAnnotation.commandIndex();
+        short                                        version      = protocolAnnotation.version();
         String                                       description  = protocolAnnotation.description();
         Class<? extends DataProtocolCallbackService> callback     = protocolAnnotation.callback();
         return DataProtocolHeader.builder()
@@ -70,7 +70,7 @@ public interface ProtocolEntity {
     /**
      * 获得数据段配置
      *
-     * @param clazz 协议对象类型
+     * @param clazz          协议对象类型
      * @param protocolEntity
      * @return 所有数据段
      */

@@ -13,6 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class BaseDataProtocol<V> {
-    private int index;
+    private short index;
     private V   value;
 }

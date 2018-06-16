@@ -10,11 +10,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DataProtocolCommand extends BaseDataProtocol<String> implements Serializable {
 
-    public DataProtocolCommand(int index, String description) {
+    public DataProtocolCommand(short index, String description) {
         super(index, description);
     }
 
-    public static DataProtocolCommand create(int index, String description) {
+    public static DataProtocolCommand create(short index, String description) {
         return new DataProtocolCommand(index, description);
     }
 }

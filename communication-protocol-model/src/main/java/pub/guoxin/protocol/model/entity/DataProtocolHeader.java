@@ -18,10 +18,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataProtocolHeader implements Serializable {
-    private int                                          totalPacket;
+    private short                                        totalPacket;
     private DataProtocolCommand                          command;
     private String                                       description;
-    private int                                          version;
+    private short                                        version;
     private Class<? extends ProtocolEntity>              protocolEntity;
     private Class<? extends DataProtocolCallbackService> callback;
 }
