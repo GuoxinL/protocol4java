@@ -21,12 +21,12 @@ public @interface Protocol {
     /**
      * 协议头：命令索引
      */
-    int commandIndex();
+    short commandIndex();
 
     /**
      * 协议版本
      */
-    int version();
+    short version();
 
     /**
      * 描述

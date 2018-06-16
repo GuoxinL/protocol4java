@@ -14,7 +14,7 @@ public @interface TypeIndex {
     /**
      * 索引
      */
-    int index();
+    short index();
     /**
      * 描述
      */

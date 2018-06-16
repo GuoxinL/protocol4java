@@ -1,6 +1,7 @@
 package pub.guoxin.protocol.conf.register;
 
 import lombok.Getter;
+import pub.guoxin.protocol.model.entity.ProtocolEntity;
 import pub.guoxin.protocol.model.entity.ProtocolSet;
 
 /**
@@ -9,12 +10,12 @@ import pub.guoxin.protocol.model.entity.ProtocolSet;
  * Created by guoxin on 18-2-25.
  */
 @Getter
-public class ProtocolEntityRegister implements ProtocolRegister<Class<?>> {
+public class ProtocolEntityRegister implements ProtocolRegister<Class<? extends ProtocolEntity>> {
 
-    private ProtocolSet<Class<?>> register = ProtocolSet.newDataProtocolMap();
+    private ProtocolSet<Class<? extends ProtocolEntity>> register = ProtocolSet.newDataProtocolMap();
 
     @Override
-    public ProtocolRegister register(Class<?> element) {
+    public ProtocolRegister register(Class<? extends ProtocolEntity> element) {
         register.register(element);
         return this;
     }
