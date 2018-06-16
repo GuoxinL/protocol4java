@@ -1,2 +1,15 @@
-# protocol
-仿Json通用传输协议（Emulate the Json universal transport protocol）
+## Build directory file tree
+Generated using the shell command `$ sh/tree.sh . > README.md`
+<pre>
+|---eclipse
+||---formatter
+|||---JavaCode.xml
+|---git
+||---.gitconfig
+|---idea
+||---keymaps
+|||---Default-Copy.xml
+|---README.md
+|---sh
+||---tree.sh
+</pre>
