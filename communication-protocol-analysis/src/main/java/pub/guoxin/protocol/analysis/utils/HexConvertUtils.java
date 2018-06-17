@@ -19,19 +19,37 @@ import java.util.Objects;
  */
 public class HexConvertUtils {
 
-    public static Object getFieldValue(Class<?> dataTypeValue, String hexString) throws DecoderException {
+    public static Object getFieldValueByDataType(Class<?> dataTypeValue, String hexString) throws DecoderException {
         if (dataTypeValue == Short.class) {
-            return HexConvertUtils.hexString2Short(hexString);
+            return hexString2Short(hexString);
         } else if (dataTypeValue == Integer.class) {
-            return HexConvertUtils.hexString2Int(hexString);
+            return hexString2Int(hexString);
         } else if (dataTypeValue == Long.class) {
-            return HexConvertUtils.hexString2Long(hexString);
+            return hexString2Long(hexString);
         } else if (dataTypeValue == String.class) {
-            return HexConvertUtils.hexString2String(hexString);
+            return hexString2String(hexString);
         } else if (dataTypeValue == Double.class) {
-            return HexConvertUtils.hexString2Double(hexString);
+            return hexString2Double(hexString);
         } else if (dataTypeValue == Boolean.class) {
-            return HexConvertUtils.hexString2Boolean(hexString);
+            return hexString2Boolean(hexString);
+        } else {
+            throw new IllegalArgumentException("不支持该类型");
+        }
+    }
+
+    public static String getHexStringByDataType(Class<?> dataTypeValue, Object obj) {
+        if (dataTypeValue == Short.class) {
+            return short2hexString((Short) obj);
+        } else if (dataTypeValue == Integer.class) {
+            return integer2hexString((Integer) obj);
+        } else if (dataTypeValue == Long.class) {
+            return long2hexString((Long) obj);
+        } else if (dataTypeValue == String.class) {
+            return string2hexString((String) obj);
+        } else if (dataTypeValue == Double.class) {
+            return double2hexString((Double) obj);
+        } else if (dataTypeValue == Boolean.class) {
+            return boolean2hexString((Boolean) obj);
         } else {
             throw new IllegalArgumentException("不支持该类型");
         }
@@ -117,6 +135,7 @@ public class HexConvertUtils {
         byte[] bytes = Hex.decodeHex(hexString.toCharArray());
         return byteArrayToInt(bytes);
     }
+
     public static boolean hexString2Boolean(String hexString) throws DecoderException {
         byte[] bytes = Hex.decodeHex(hexString.toCharArray());
         if (bytes.length != 1) {
@@ -139,8 +158,18 @@ public class HexConvertUtils {
         return Integer.toHexString(integer);
     }
 
+    public static String short2hexString(Short aShort) {
+        return Integer.toHexString(-aShort & 0xffff);
+    }
+
     public static String long2hexString(long l) {
         return Long.toHexString(l);
+    }
+
+    public static String string2hexString(String s) {
+        byte[] bytes     = s.getBytes();
+        String hexString = BytesUtils.toHexString(bytes);
+        return hexString;
     }
 
     public static String string2hexString(String s, int length) {
@@ -165,15 +194,15 @@ public class HexConvertUtils {
         byte[] testfloat = {-26, 16, 0, 0, 0, 0, 0, 0};
         String hexString = BytesUtils.toHexString(testfloat);
         System.out.println(hexString);
-        boolean[] m = {true, false, true, true};
-        String binaryStr = "";
+        boolean[] m         = {true, false, true, true};
+        String    binaryStr = "";
         for (boolean bit : m) {
             binaryStr = binaryStr + ((bit) ? "1" : "0");
         }
-        boolean boo = true;
-        int integer = (boo) ? 1 : 0;
-        int decimal = Integer.parseInt(binaryStr, 2);
-        String hexStr = Integer.toHexString(integer);
+        boolean boo     = true;
+        int     integer = (boo) ? 1 : 0;
+        int     decimal = Integer.parseInt(binaryStr, 2);
+        String  hexStr  = Integer.toHexString(integer);
         System.out.println("hexStr" + hexStr);
 
         byte[] testf = new byte[7];
@@ -181,16 +210,16 @@ public class HexConvertUtils {
         System.arraycopy(testfloat, 1, testf, 0, testf.length);
         System.out.println("~~~" + Arrays.toString(testf));
         String strFloat = "BD00833F";
-        Float aFloat = hexString2Float(strFloat);
+        Float  aFloat   = hexString2Float(strFloat);
         System.out.println(aFloat);
 
 
         String strLong = "3930000000000000";
-        long l = hexString2Long(strLong);
+        long   l       = hexString2Long(strLong);
         System.out.println(l);
 
         String strDouble = "E17A14AE474D9340";
-        double v = hexString2Double(strDouble);
+        double v         = hexString2Double(strDouble);
         System.out.println(v);
 
         byte[] testint = {-95, 0, 0, 0,};
@@ -206,8 +235,8 @@ public class HexConvertUtils {
         String strchar = "EF";
 //        char s = hexString2Char(strchar);
 //        System.out.println("string" + s);
-        double a = 4.1;
-        int b = 4;
+        double  a  = 4.1;
+        int     b  = 4;
         boolean b1 = a == b;
         System.out.println(b1);
         int i2 = 85 + 12;

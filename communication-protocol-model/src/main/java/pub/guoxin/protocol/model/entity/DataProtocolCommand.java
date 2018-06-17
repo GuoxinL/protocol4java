@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
+ * 协议 命令
  * Create by guoxin on 2018/6/12
  */
 @NoArgsConstructor

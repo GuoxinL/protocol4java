@@ -1,7 +1,9 @@
 package pub.guoxin.protocol.model.entity;
 
-import lombok.*;
-import pub.guoxin.protocol.model.anno.Protocol;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,8 +11,7 @@ import java.util.List;
 /**
  * Created by guoxin on 18-2-25.
  */
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +27,7 @@ public class DataProtocol<T extends ProtocolEntity> implements Serializable {
     /**
      * 解析后数据
      */
-    private T data;
+    private T                        data;
+
 
 }

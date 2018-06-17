@@ -49,17 +49,69 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
 
     @Override
     public String analysisProtocolEntity2ProtocolData(ProtocolEntity protocolEntity) {
+
         DataProtocol dataProtocol = ProtocolEntity.toDataProtocol(protocolEntity);
         if (Objects.isNull(dataProtocol)) {
             return null;
         }
-        DataProtocolHeader       header  = dataProtocol.getHeader();
+        String hexString = toHexString(dataProtocol);
+        return hexString;
+    }
+
+    public String toHexString(DataProtocol dataProtocol) {
+        StringBuffer hexStringBuffer = new StringBuffer();
+
+        // 数据头
+        DataProtocolHeader header = dataProtocol.getHeader();
+        {
+            // 协议 命令
+            short  index     = header.getCommand().getIndex();
+            String hexString = HexConvertUtils.short2hexString(index);
+            hexStringBuffer.append(hexString);
+        }
+        {
+            // 协议 版本
+            short  version   = header.getVersion();
+            String hexString = HexConvertUtils.short2hexString(version);
+            hexStringBuffer.append(hexString);
+        }
+        {
+            // 协议 数据段总包数
+            short  totalPacket = header.getTotalPacket();
+            String hexString   = HexConvertUtils.short2hexString(totalPacket);
+            hexStringBuffer.append(hexString);
+        }
+
+
+        // 数据段
         List<DataProtocolPacket> packets = dataProtocol.getPackets();
+        for (DataProtocolPacket packet : packets) {
+            {
+                // 拼凑字段索引
+                short  codeIndex = packet.getCode().getIndex();
+                String hexString = HexConvertUtils.short2hexString(codeIndex);
+                hexStringBuffer.append(hexString);
+            }
+            {
+                // 拼凑类型索引
+                short  typeIndex = packet.getType().getIndex();
+                String hexString = HexConvertUtils.short2hexString(typeIndex);
+                hexStringBuffer.append(hexString);
+            }
+            {
+                // 拼凑长度，拼凑数据
+                Class<?> value                = packet.getType().getValue();
+                Object   data                 = packet.getData();
+                String   dataHexString        = HexConvertUtils.getHexStringByDataType(value, data);
+                String   totalLengthHexString = HexConvertUtils.short2hexString((short) (dataHexString.length() / 2));
+                hexStringBuffer.append(totalLengthHexString);
+                hexStringBuffer.append(dataHexString);
 
-        int index   = header.getCommand().getIndex();
-        int version = header.getVersion();
+            }
 
-        return null;
+        }
+        String string = hexStringBuffer.toString();
+        return string;
     }
 
     private ProtocolEntity getData(DataProtocolHeader header, List<DataProtocolPacket> packets) {
@@ -87,7 +139,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         // TODO 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
-                        throw new ProtocolNotFoundException("如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误", e);
+                        throw new ProtocolException("如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误", e);
                     }
                 }
             }
@@ -152,7 +204,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
             short typeIndex = typeIndexAnnotation.index();
 
             if (codeIndex == dataCodeIndex && typeIndex == dataTypeIndex) {
-                Object fieldValue = HexConvertUtils.getFieldValue(dataTypeValue, hexString);
+                Object fieldValue = HexConvertUtils.getFieldValueByDataType(dataTypeValue, hexString);
                 dataProtocolPacket.setData(fieldValue);
             }
         }
@@ -167,12 +219,12 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
         for (DataProtocol<ProtocolEntity> dataProtocol : dataProtocols) {
             DataProtocolHeader header = dataProtocol.getHeader();
             boolean            flag;
-            short              commandCode;
+            short              commandIndex;
             short              version;
             {
                 String hexString = BytesUtils.subStringByIndex(data, Header.COMMAND_START, Header.COMMAND_END);
-                commandCode = HexConvertUtils.hexString2Short(hexString);
-                flag = header.getCommand().getIndex() == commandCode;
+                commandIndex = HexConvertUtils.hexString2Short(hexString);
+                flag = header.getCommand().getIndex() == commandIndex;
             }
             {
                 String hexString = BytesUtils.subStringByIndex(data, Header.VERSION_START, Header.VERSION_END);
