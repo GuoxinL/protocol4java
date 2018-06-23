@@ -1,6 +1,14 @@
 # Protocol
-仿Json通用传输协议（Emulate the Json universal transport protocol）
+类Json通用传输协议（Emulate the Json universal transport protocol）
 
-## 开发进度
+## 未完成任务
+
+### 2018年06月23日
+1. 现有类型是写死在一个类中，不符合设计模式开闭原则，待重新设计暂时想到在模型和处理中间添加一个Convert层，用于灵活的转换数据对扩展开放
+2. 对于Callback应从`@Protocol`注解中拆解出来，因为协议对象中只有在需要相应数据时才需要有Callback的存在，所以Callback是非必要的
+3. 现有在解析中流转的数据是`String`类型的16进制字符串，在执行效率有限，应换成byte类型有助于提高效率
+
+## 以完成任务
+### 2018年06月17日
 1. 优化类型索引列表，固定类型索引按需开发
 2. 全面测试

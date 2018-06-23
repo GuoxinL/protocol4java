@@ -18,7 +18,7 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/GuoxinL/protocol.git</url>
     <inceptionYear>2018</inceptionYear>
-    <description>仿Json通用传输协议（Emulate the Json universal transport protocol）</description>
+    <description>类Json通用传输协议（Emulate the Json universal transport protocol）</description>
 
     <licenses>
         <license>
