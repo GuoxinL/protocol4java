@@ -1,0 +1,12 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+*.iml
+*/target
+communication-protocol-analysis/src/main/resources/
+communication-protocol-analysis/src/test/
+communication-protocol-conf/src/main/resources/
+communication-protocol-conf/src/test/
+communication-protocol-model/src/main/resources/
+communication-protocol-model/src/test/
+communication-protocol-samples/src/main/resources/
+communication-protocol-samples/src/test/

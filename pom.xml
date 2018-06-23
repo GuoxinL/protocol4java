@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pub.guoxin.protocol</groupId>
+    <artifactId>protocol</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <modules>
+        <module>communication-protocol-conf</module>
+        <module>communication-protocol-analysis</module>
+        <module>communication-protocol-samples</module>
+        <module>communication-protocol-model</module>
+    </modules>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <url>https://github.com/GuoxinL/protocol.git</url>
+    <inceptionYear>2018</inceptionYear>
+    <description>仿Json通用传输协议（Emulate the Json universal transport protocol）</description>
+
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE, Version 3</name>
+            <url>http://www.gnu.org/licenses/gpl.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Guoxin Liu</name>
+            <email>lgx31@sina.com</email>
+            <timezone>+8</timezone>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <tag>HEAD</tag>
+        <connection>scm:git:git@github.com:GuoxinL/protocol.git</connection>
+        <developerConnection>scm:git:https://github.com/GuoxinL/protocol.git</developerConnection>
+        <url>https://github.com/GuoxinL/protocol.git</url>
+    </scm>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- no test -->
+        <maven.test.skip>true</maven.test.skip>
+
+        <!-- dependencies -->
+        <guava.version>23.0</guava.version>
+
+        <!-- plugin version -->
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.0.2.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/GuoxinL/protocol/issues</url>
+    </issueManagement>
+</project>
