@@ -20,6 +20,6 @@ public class SamplesApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        dataProtocolAnalysis.analysisProtocolEntity2ProtocolData()
+//        dataProtocolAnalysis.analysisProtocolEntity2ProtocolData()
     }
 }
