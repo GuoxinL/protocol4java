@@ -3,6 +3,7 @@ package pub.guoxin.protocol.samples;
 import lombok.Getter;
 import lombok.Setter;
 import pub.guoxin.protocol.model.DataProtocolCallbackService;
+import pub.guoxin.protocol.model.anno.Callback;
 import pub.guoxin.protocol.model.anno.CodeIndex;
 import pub.guoxin.protocol.model.anno.Protocol;
 import pub.guoxin.protocol.model.entity.ProtocolEntity;
@@ -12,7 +13,8 @@ import pub.guoxin.protocol.model.entity.ProtocolEntity;
  */
 @Getter
 @Setter
-@Protocol(commandIndex = 1, version = 1, callback = DataProtocolCallbackService.class)
+@Protocol(commandIndex = 1, version = 1)
+@Callback(callback = DataProtocolCallbackService.class)
 public class UpgradeProtocol implements ProtocolEntity {
     @CodeIndex(index = 1, description = "aaaaa")
     private String aaa;

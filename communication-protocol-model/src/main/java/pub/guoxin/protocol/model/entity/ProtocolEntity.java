@@ -3,6 +3,7 @@ package pub.guoxin.protocol.model.entity;
 import com.google.common.collect.Lists;
 import pub.guoxin.protocol.model.DataProtocolCallbackService;
 import pub.guoxin.protocol.model.TypeClass;
+import pub.guoxin.protocol.model.anno.Callback;
 import pub.guoxin.protocol.model.anno.CodeIndex;
 import pub.guoxin.protocol.model.anno.Protocol;
 import pub.guoxin.protocol.model.exception.ProtocolConfigException;
@@ -23,10 +24,11 @@ public interface ProtocolEntity {
     static DataProtocol toDataProtocol(ProtocolEntity protocolEntity) {
         Class<? extends ProtocolEntity> clazz              = protocolEntity.getClass();
         Protocol                        protocolAnnotation = clazz.getAnnotation(Protocol.class);
+        Callback                        callbackAnnotation = clazz.getAnnotation(Callback.class);
         if (Objects.isNull(protocolAnnotation)) {
             return null;
         }
-        DataProtocolHeader       dataProtocolHeader  = getDataProtocolHeader(protocolAnnotation, clazz);
+        DataProtocolHeader       dataProtocolHeader  = getDataProtocolHeader(protocolAnnotation, callbackAnnotation, clazz);
         List<DataProtocolPacket> dataProtocolPackets = getDataProtocolPackets(clazz, protocolEntity);
         // 反射中获取的字段顺序是不稳定的，所以按照字段顺序进行排序
         dataProtocolPackets.sort(Comparator.comparing(dataProtocolPacket -> dataProtocolPacket.getCode().getIndex()));
@@ -36,10 +38,11 @@ public interface ProtocolEntity {
 
     static DataProtocol toDataProtocol(Class<? extends ProtocolEntity> clazz) {
         Protocol protocolAnnotation = clazz.getAnnotation(Protocol.class);
+        Callback callbackAnnotation = clazz.getAnnotation(Callback.class);
         if (Objects.isNull(protocolAnnotation)) {
             return null;
         }
-        DataProtocolHeader       dataProtocolHeader  = getDataProtocolHeader(protocolAnnotation, clazz);
+        DataProtocolHeader       dataProtocolHeader  = getDataProtocolHeader(protocolAnnotation, callbackAnnotation, clazz);
         List<DataProtocolPacket> dataProtocolPackets = getDataProtocolPackets(clazz, null);
         // 反射中获取的字段顺序是不稳定的，所以按照字段顺序进行排序
         dataProtocolPackets.sort(Comparator.comparing(dataProtocolPacket -> dataProtocolPacket.getCode().getIndex()));
@@ -51,14 +54,15 @@ public interface ProtocolEntity {
      * 根据注解获得协议配置
      *
      * @param protocolAnnotation 协议注解
+     * @param callbackAnnotation
      * @param clazz
      * @return 协议头配置
      */
-    static DataProtocolHeader getDataProtocolHeader(Protocol protocolAnnotation, Class<? extends ProtocolEntity> clazz) {
+    static DataProtocolHeader getDataProtocolHeader(Protocol protocolAnnotation, Callback callbackAnnotation, Class<? extends ProtocolEntity> clazz) {
         short                                        commandIndex = protocolAnnotation.commandIndex();
         short                                        version      = protocolAnnotation.version();
         String                                       description  = protocolAnnotation.description();
-        Class<? extends DataProtocolCallbackService> callback     = protocolAnnotation.callback();
+        Class<? extends DataProtocolCallbackService> callback     = callbackAnnotation.callback();
         return DataProtocolHeader.builder()
                 .command(DataProtocolCommand.create(commandIndex, description))
                 .description(description)

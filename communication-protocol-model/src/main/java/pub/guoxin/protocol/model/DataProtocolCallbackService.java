@@ -5,7 +5,7 @@ import pub.guoxin.protocol.model.anno.Protocol;
 import pub.guoxin.protocol.model.entity.ProtocolEntity;
 
 /**
- * 解析后回调接口，使用时需要实现该类，然后将实现类填写到 {@link Protocol#callback()} 中
+ * 解析后回调接口，使用时需要实现该类，然后将实现类填写到 {@link pub.guoxin.protocol.model.anno.Callback#callback()} 中
  * <p>
  * Create by guoxin on 2018/6/14
  */

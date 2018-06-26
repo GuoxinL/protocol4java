@@ -33,8 +33,4 @@ public @interface Protocol {
      */
     String description() default "";
 
-    /**
-     * 收到协议对应的处理回调
-     */
-    Class<? extends DataProtocolCallbackService> callback() default DataProtocolCallbackService.class;
 }
