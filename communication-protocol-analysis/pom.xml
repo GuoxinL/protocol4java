@@ -12,20 +12,14 @@
     <artifactId>communication-protocol-analysis</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>pub.guoxin.protocol</groupId>
-            <artifactId>communication-protocol-model</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pub.guoxin.protocol</groupId>
-            <artifactId>communication-protocol-conf</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
         <!-- decode -->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -5,14 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pub.guoxin.protocol</groupId>
-    <artifactId>protocol</artifactId>
+    <artifactId>protocol4java</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>communication-protocol-conf</module>
         <module>communication-protocol-analysis</module>
         <module>communication-protocol-samples</module>
-        <module>communication-protocol-model</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>

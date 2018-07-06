@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 import pub.guoxin.protocol.analysis.utils.BytesUtils;
 import pub.guoxin.protocol.analysis.utils.HexConvertUtils;
 import pub.guoxin.protocol.analysis.utils.ObjectClone;
-import pub.guoxin.protocol.model.TypeClass;
-import pub.guoxin.protocol.model.anno.CodeIndex;
-import pub.guoxin.protocol.model.entity.*;
-import pub.guoxin.protocol.model.exception.ProtocolConfigException;
-import pub.guoxin.protocol.model.exception.ProtocolException;
-import pub.guoxin.protocol.model.exception.ProtocolNotFoundException;
+import pub.guoxin.protocol.analysis.model.TypeClass;
+import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
+import pub.guoxin.protocol.analysis.model.entity.*;
+import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
+import pub.guoxin.protocol.analysis.model.exception.ProtocolException;
+import pub.guoxin.protocol.analysis.model.exception.ProtocolNotFoundException;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.lang.Integer.sum;
-import static pub.guoxin.protocol.model.constants.DataProtocolConstants.Header;
-import static pub.guoxin.protocol.model.constants.DataProtocolConstants.Packet;
+import static pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants.Header;
+import static pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants.Packet;
 
 
 /**

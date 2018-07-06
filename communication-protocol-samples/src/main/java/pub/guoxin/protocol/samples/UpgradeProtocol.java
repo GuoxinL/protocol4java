@@ -2,11 +2,11 @@ package pub.guoxin.protocol.samples;
 
 import lombok.Getter;
 import lombok.Setter;
-import pub.guoxin.protocol.model.DataProtocolCallbackService;
-import pub.guoxin.protocol.model.anno.Callback;
-import pub.guoxin.protocol.model.anno.CodeIndex;
-import pub.guoxin.protocol.model.anno.Protocol;
-import pub.guoxin.protocol.model.entity.ProtocolEntity;
+import pub.guoxin.protocol.analysis.model.DataProtocolCallbackService;
+import pub.guoxin.protocol.analysis.model.anno.Callback;
+import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
+import pub.guoxin.protocol.analysis.model.anno.Protocol;
+import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 
 /**
  * Create by guoxin on 2018/6/13

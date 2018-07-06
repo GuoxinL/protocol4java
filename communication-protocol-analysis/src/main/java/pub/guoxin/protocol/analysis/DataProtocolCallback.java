@@ -5,9 +5,9 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import pub.guoxin.protocol.model.DataProtocolCallbackService;
-import pub.guoxin.protocol.model.entity.DataProtocol;
-import pub.guoxin.protocol.model.entity.ProtocolEntity;
+import pub.guoxin.protocol.analysis.model.DataProtocolCallbackService;
+import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
+import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 
 
 /**

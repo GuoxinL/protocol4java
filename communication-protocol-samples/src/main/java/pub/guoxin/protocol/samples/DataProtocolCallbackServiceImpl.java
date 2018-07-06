@@ -1,6 +1,6 @@
 package pub.guoxin.protocol.samples;
 
-import pub.guoxin.protocol.model.DataProtocolCallbackService;
+import pub.guoxin.protocol.analysis.model.DataProtocolCallbackService;
 
 /**
  * Create by guoxin on 2018/6/16

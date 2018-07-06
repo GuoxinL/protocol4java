@@ -2,7 +2,7 @@ package pub.guoxin.protocol.analysis.utils;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import pub.guoxin.protocol.model.TypeClass;
+import pub.guoxin.protocol.analysis.model.TypeClass;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
