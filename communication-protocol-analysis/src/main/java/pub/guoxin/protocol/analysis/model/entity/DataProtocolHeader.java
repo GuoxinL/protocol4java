@@ -2,14 +2,12 @@ package pub.guoxin.protocol.analysis.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.codec.DecoderException;
-import pub.guoxin.protocol.analysis.model.DataProtocolCallbackService;
 import pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants;
-import pub.guoxin.protocol.analysis.model.exception.ProtocolNotFoundException;
+import pub.guoxin.protocol.analysis.utils.ArrayUtils;
+import pub.guoxin.protocol.analysis.utils.ByteUtil;
 import pub.guoxin.protocol.analysis.utils.BytesUtils;
-import pub.guoxin.protocol.analysis.utils.HexConvertUtils;
 
 import java.io.Serializable;
 
@@ -18,40 +16,63 @@ import java.io.Serializable;
  * <p>
  * Created by guoxin on 18-2-25.
  */
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataProtocolHeader implements Serializable {
-    private short                                        totalPacket;
-    private DataProtocolCommand                          command;
-    private String                                       description;
-    private short                                        version;
-    private Class<? extends ProtocolEntity>              protocolEntity;
-    private Class<? extends DataProtocolCallbackService> callback;
+public class DataProtocolHeader implements Serializable, ProtocolSerialization {
 
-    public void analysisHeader(String data) throws DecoderException {
+    private DataProtocolCommand command;
+    private short               version;
+    private short               totalPacket;
+
+    /**
+     * 将字节流转换为协议对象
+     *
+     * @param data 字节流
+     */
+    public DataProtocolHeader(byte[] data) {
         {
-            String hexString   = BytesUtils.subStringByIndex(data, DataProtocolConstants.Header.COMMAND_START, DataProtocolConstants.Header.COMMAND_END);
-            short  commandCode = HexConvertUtils.hexString2Short(hexString);
-            // 没事闲的在验证一遍
-            if (this.command.getIndex() == commandCode) {
-                throw new ProtocolNotFoundException("二次验证 command 失败");
-            }
+            byte[] bytes       = BytesUtils.createByteArray(data, DataProtocolConstants.Header.COMMAND_START, DataProtocolConstants.Header.COMMAND_END);
+            short  commandCode = ByteUtil.getShort(bytes);
+            this.command = DataProtocolCommand.create(commandCode, null);
         }
         {
-            String hexString = BytesUtils.subStringByIndex(data, DataProtocolConstants.Header.VERSION_START, DataProtocolConstants.Header.VERSION_END);
-            short  version   = HexConvertUtils.hexString2Short(hexString);
-            // 没事闲的在验证一遍
-            if (this.version == version) {
-                throw new ProtocolNotFoundException("二次验证 version 失败");
-            }
+            byte[] bytes   = BytesUtils.createByteArray(data, DataProtocolConstants.Header.VERSION_START, DataProtocolConstants.Header.VERSION_END);
+            short  version = ByteUtil.getShort(bytes);
+            this.version = version;
         }
         {
-            String hexString   = BytesUtils.subStringByIndex(data, DataProtocolConstants.Header.TOTAL_PACKET_START, DataProtocolConstants.Header.TOTAL_PACKET_END);
-            short  totalPacket = HexConvertUtils.hexString2Short(hexString);
+            byte[] bytes       = BytesUtils.createByteArray(data, DataProtocolConstants.Header.TOTAL_PACKET_START, DataProtocolConstants.Header.TOTAL_PACKET_END);
+            short  totalPacket = ByteUtil.getShort(bytes);
             this.totalPacket = totalPacket;
         }
+
+    }
+
+    /**
+     * 将协议对象序列化为字节流
+     *
+     * @return 字节流
+     */
+    @Override
+    public byte[] serialization() {
+        byte[] result = null;
+        {
+            // 协议 命令
+            result = ByteUtil.getBytes(this.command.getIndex());
+        }
+        {
+            // 协议 版本
+            byte[] bytes = ByteUtil.getBytes(this.version);
+            result = ArrayUtils.merge(result, bytes);
+        }
+        {
+            // 协议 数据段总包数
+            byte[] bytes = ByteUtil.getBytes(this.totalPacket);
+            result = ArrayUtils.merge(result, bytes);
+        }
+        return result;
     }
 
 }

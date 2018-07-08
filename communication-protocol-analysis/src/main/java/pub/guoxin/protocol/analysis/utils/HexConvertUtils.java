@@ -225,75 +225,11 @@ public class HexConvertUtils {
 
     public static void main(String[] args) throws DecoderException, CharacterCodingException {
 
-        String hexString3 = Integer.toHexString((true) ? 1 : 0);
-        System.out.println(hexString3);
-        byte   fdsa       = 10;
-        String hexString1 = byte2hexString(fdsa);
-        String hexString2 = "0A";
-        char[] chars      = hexString2.toCharArray();
-        byte[] bytes      = Hex.decodeHex(chars);
-        System.out.println("~~~" + Arrays.toString(bytes));
+        String val = "123456qwert";
+        String s   = string2hexString(val);
+        System.out.println(s);
 
-        System.out.println(hexString1);
-        Byte decode = Byte.decode("127");
-        System.out.println(decode);
-        byte[] testfloat = {-26, 16, 0, 0, 0, 0, 0, 0};
-        String hexString = BytesUtils.toHexString(testfloat);
-        System.out.println(hexString);
-        boolean[] m         = {true, false, true, true};
-        String    binaryStr = "";
-        for (boolean bit : m) {
-            binaryStr = binaryStr + ((bit) ? "1" : "0");
-        }
-        boolean boo     = true;
-        int     integer = (boo) ? 1 : 0;
-        int     decimal = Integer.parseInt(binaryStr, 2);
-        String  hexStr  = Integer.toHexString(integer);
-        System.out.println("hexStr" + hexStr);
-
-        byte[] testf = new byte[7];
-
-        System.arraycopy(testfloat, 1, testf, 0, testf.length);
-        System.out.println("~~~" + Arrays.toString(testf));
-        String strFloat = "BD00833F";
-        Float  aFloat   = hexString2Float(strFloat);
-        System.out.println(aFloat);
-
-
-        String strLong = "3930000000000000";
-        long   l       = hexString2Long(strLong);
-        System.out.println(l);
-
-        String strDouble = "E17A14AE474D9340";
-        double v         = hexString2Double(strDouble);
-        System.out.println(v);
-
-        byte[] testint = {-95, 0, 0, 0,};
-        for (int i = 0; i < testint.length; i++) {
-            int i1 = testint[i] & 0xFF;
-            System.out.println(i1);
-        }
-
-        for (int i = 0; i < testfloat.length; i++) {
-            int i1 = testfloat[i] & 0xFF;
-            System.out.println("abc" + i1);
-        }
-        String strchar = "EF";
-//        char s = hexString2Char(strchar);
-//        System.out.println("string" + s);
-        double  a  = 4.1;
-        int     b  = 4;
-        boolean b1 = a == b;
-        System.out.println(b1);
-        int i2 = 85 + 12;
-        System.out.println(i2);
-        int i = 10 / 5;
-        System.out.println(i);
-        int i1 = i2 % 85;
-        System.out.println(i1);
-
-        for (int j = 0; j < 3; j++) {
-            System.out.println(j);
-        }
+        String s1 = byte2hexString((byte) 1);
+        System.out.println(s1);
     }
 }

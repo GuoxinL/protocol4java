@@ -32,7 +32,7 @@ public interface ProtocolEntity {
         List<DataProtocolPacket> dataProtocolPackets = getDataProtocolPackets(clazz, protocolEntity);
         // 反射中获取的字段顺序是不稳定的，所以按照字段顺序进行排序
         dataProtocolPackets.sort(Comparator.comparing(dataProtocolPacket -> dataProtocolPacket.getCode().getIndex()));
-        DataProtocol build = DataProtocol.builder().header(dataProtocolHeader).packets(dataProtocolPackets).build();
+        DataProtocol build = DataProtocol.builder().header(dataProtocolHeader).packets((DataProtocolPacketList) dataProtocolPackets).build();
         return build;
     }
 
@@ -46,7 +46,7 @@ public interface ProtocolEntity {
         List<DataProtocolPacket> dataProtocolPackets = getDataProtocolPackets(clazz, null);
         // 反射中获取的字段顺序是不稳定的，所以按照字段顺序进行排序
         dataProtocolPackets.sort(Comparator.comparing(dataProtocolPacket -> dataProtocolPacket.getCode().getIndex()));
-        DataProtocol build = DataProtocol.builder().header(dataProtocolHeader).packets(dataProtocolPackets).build();
+        DataProtocol build = DataProtocol.builder().header(dataProtocolHeader).packets((DataProtocolPacketList) dataProtocolPackets).build();
         return build;
     }
 
@@ -65,10 +65,10 @@ public interface ProtocolEntity {
         Class<? extends DataProtocolCallbackService> callback     = callbackAnnotation.callback();
         return DataProtocolHeader.builder()
                 .command(DataProtocolCommand.create(commandIndex, description))
-                .description(description)
-                .version(version)
-                .callback(callback)
-                .protocolEntity(clazz).build();
+//                .description(description)
+                .version(version).build();
+//                .callback(callback)
+//                .protocolEntity(clazz).build();
     }
 
     /**
@@ -91,7 +91,7 @@ public interface ProtocolEntity {
             TypeClass        byClass          = TypeClass.findByClass(declaredField.getType());
             DataProtocolType dataProtocolType = DataProtocolType.create(byClass.getIndex(), declaredField.getType());
 
-            DataProtocolPacket build = DataProtocolPacket.builder().code(dataProtocolCode).type(dataProtocolType).data(protocolEntity).build();
+            DataProtocolPacket build = DataProtocolPacket.builder().code(dataProtocolCode).type(dataProtocolType).build();
             dataProtocolPackets.add(build);
         }
         return dataProtocolPackets;

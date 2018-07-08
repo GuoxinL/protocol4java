@@ -57,6 +57,14 @@ public interface DataProtocolConstants {
         int DATA_LENGTH_START = TYPE_END;
         int DATA_LENGTH_END   = DATA_LENGTH_START + 2;
 
+        // totalLength 不固定无法指定
     }
 
+    /**
+     * 元素
+     */
+    interface Element {
+        int ELEMENT_LENGTH_START = BEGINNING_INDEX;
+        int ELEMENT_LENGTH_END   = ELEMENT_LENGTH_START + 2;
+    }
 }

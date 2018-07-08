@@ -4,119 +4,83 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pub.guoxin.protocol.analysis.model.TypeClass;
-import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
-import pub.guoxin.protocol.analysis.model.exception.ProtocolException;
-import pub.guoxin.protocol.analysis.utils.HexConvertUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import pub.guoxin.protocol.analysis.model.DataProtocolCallbackService;
+import pub.guoxin.protocol.analysis.model.anno.Callback;
+import pub.guoxin.protocol.analysis.model.anno.Protocol;
+import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
+import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
+ * 协议对象转换处理中间适配层
+ * <p>
  * Created by guoxin on 18-2-25.
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataProtocol<T extends ProtocolEntity> implements Serializable {
+public class DataProtocol<T extends ProtocolEntity> implements Serializable, ProtocolSerialization {
     /**
      * 协议头
      */
-    private DataProtocolHeader       header;
+    private DataProtocolHeader                           header;
     /**
      * 数据段
      */
-    private List<DataProtocolPacket> packets;
+    private DataProtocolPacketList                       packets;
+    /**
+     * 协议对象类型
+     */
+    private Class<? extends ProtocolEntity>              protocolEntity;
+    /**
+     * 协议回调
+     */
+    private Class<? extends DataProtocolCallbackService> callback;
     /**
      * 解析后数据
      */
-    private T                        data;
+    private T                                            data;
 
-    private ProtocolEntity getProtocolEntity() {
-        Class<? extends ProtocolEntity> protocolEntity = this.header.getProtocolEntity();
-        Object                          instance       = null;
-        try {
-            instance = protocolEntity.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            throw new ProtocolException("实例化协议对象失败");
-        }
-        for (Field declaredField : protocolEntity.getDeclaredFields()) {
-            CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
-
-            short codeIndex = codeIndexAnnotation.index();
-            for (DataProtocolPacket packet : this.packets) {
-                short packetCodeIndex = packet.getCode().getIndex();
-                if (codeIndex == packetCodeIndex) {
-                    declaredField.setAccessible(true);
-                    try {
-                        declaredField.set(instance, packet.getData());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        // TODO 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
-                        throw new ProtocolException("如果这个对象正在执行Java语言访问控制 ，并且底层子弹不可访问会出现此错误", e);
-                    }
-                }
-            }
-
-        }
-        return (ProtocolEntity) instance;
+    /**
+     * 初始化数据段
+     *
+     * @param bytes 字节流
+     */
+    public DataProtocol(byte[] bytes) {
+        header = new DataProtocolHeader(bytes);
+        packets = new DataProtocolPacketList(bytes, header.getTotalPacket());
     }
 
-    public String toHexString(DataProtocol dataProtocol) {
-        StringBuffer hexStringBuffer = new StringBuffer();
-
-        // 数据头
-        {
-            // 协议 命令
-            short  index     = this.header.getCommand().getIndex();
-            String hexString = HexConvertUtils.short2hexString(index);
-            hexStringBuffer.append(hexString);
+    public DataProtocol(ProtocolEntity protocolEntity){
+        Class<? extends ProtocolEntity> clazz              = protocolEntity.getClass();
+        Protocol                protocolAnnotation = clazz.getAnnotation(Protocol.class);
+        Callback                callbackAnnotation = clazz.getAnnotation(Callback.class);
+        if (Objects.isNull(protocolAnnotation)) {
+            throw new ProtocolConfigException("请使用`@Protocol`对您的协议对象进行标识。");
         }
-        {
-            // 协议 版本
-            short  version   = this.header.getVersion();
-            String hexString = HexConvertUtils.short2hexString(version);
-            hexStringBuffer.append(hexString);
-        }
-        {
-            // 协议 数据段总包数
-            short  totalPacket = this.header.getTotalPacket();
-            String hexString   = HexConvertUtils.short2hexString(totalPacket);
-            hexStringBuffer.append(hexString);
-        }
-
-
-        // 数据段
-        for (DataProtocolPacket packet : this.packets) {
-            {
-                // 拼凑字段索引
-                short  codeIndex = packet.getCode().getIndex();
-                String hexString = HexConvertUtils.short2hexString(codeIndex);
-                hexStringBuffer.append(hexString);
-            }
-            {
-                // 拼凑类型索引
-                short  typeIndex = packet.getType().getIndex();
-                String hexString = HexConvertUtils.short2hexString(typeIndex);
-                hexStringBuffer.append(hexString);
-            }
-            {
-                // 拼凑长度，拼凑数据
-                Class<?>  value                = packet.getType().getValue();
-                Object    data                 = packet.getData();
-                TypeClass byClass              = TypeClass.findByClass(value);
-                String    dataHexString        = HexConvertUtils.getHexStringByDataType(byClass, data);
-                String    totalLengthHexString = HexConvertUtils.short2hexString((short) (dataHexString.length() / 2));
-                hexStringBuffer.append(totalLengthHexString);
-                hexStringBuffer.append(dataHexString);
-
-            }
-        }
-        String string = hexStringBuffer.toString();
-        return string;
+        callback = callbackAnnotation.callback();
+    }
+/**
+浩哥你好，我正在写一个协议相关的项目，但是在实现中碰到了一个问题
+ 这个项目使用spring的IOC DI后来感觉这个项目不应该和spring出现强耦合，主要使用spring的地方是这个项目的配置模块，把协议对象注册到一个map中，通过IOC交予容器管理，然后在解析时使用@Autowired注入到解析流程中使用，但是我发现我脱离了Spring跟不不知道怎么实现这种情况，如果您有时间还请您指点一下
+ */
+    /**
+     * 协议对象
+     *
+     * @return 字节流
+     */
+    @Override
+    public byte[] serialization() {
+        byte[] headerBytes  = header.serialization();
+        byte[] packetsBytes = packets.serialization();
+        byte[] bytes        = ArrayUtils.merge(headerBytes, packetsBytes);
+        return bytes;
     }
 
 }

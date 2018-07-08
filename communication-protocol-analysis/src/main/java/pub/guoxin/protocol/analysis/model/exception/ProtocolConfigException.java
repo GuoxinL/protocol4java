@@ -1,10 +1,11 @@
 package pub.guoxin.protocol.analysis.model.exception;
 
 /**
+ * 协议配置错误
+ * <p>
  * Create by guoxin on 2018/6/14
  */
-
-public class ProtocolConfigException extends RuntimeException {
+public class ProtocolConfigException extends ProtocolException {
     public ProtocolConfigException() {
         super();
     }

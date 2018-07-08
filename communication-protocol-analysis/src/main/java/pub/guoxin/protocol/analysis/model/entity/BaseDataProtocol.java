@@ -14,5 +14,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public abstract class BaseDataProtocol<V> {
     private short index;
-    private V   value;
+    private V     value;
 }

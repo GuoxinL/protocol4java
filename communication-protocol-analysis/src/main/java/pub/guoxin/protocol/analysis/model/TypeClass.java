@@ -3,6 +3,8 @@ package pub.guoxin.protocol.analysis.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * Create by guoxin on 2018/6/22
  */
@@ -56,4 +58,5 @@ public enum TypeClass {
         }
         throw new IllegalArgumentException("不支持该类型！");
     }
+
 }

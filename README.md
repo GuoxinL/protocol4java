@@ -41,5 +41,8 @@
 2. 数组类型数据:  
 基本类型数据包含八种基本类型`byte[]` `short[]` `int[]` `long[]` `float[]` `double[]` `boolean[]` `string[]`
 
+## 协议架构
+
+配置模块
 > Tip:
 >> 该协议暂时还不支持

@@ -18,6 +18,6 @@ import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 public class UpgradeProtocol implements ProtocolEntity {
     @CodeIndex(index = 1, description = "aaaaa")
     private String aaa;
-    @CodeIndex(index = 2, description = "aaaaa")
+    @CodeIndex(index = 2, description = "bbbbb")
     private String bbb;
 }

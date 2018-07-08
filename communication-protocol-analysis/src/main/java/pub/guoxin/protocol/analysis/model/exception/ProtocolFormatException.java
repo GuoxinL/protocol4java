@@ -1,9 +1,11 @@
 package pub.guoxin.protocol.analysis.model.exception;
 
 /**
+ * 协议格式异常
+ * <p>
  * Create by guoxin on 2018/6/14
  */
-public class ProtocolFormatException extends RuntimeException {
+public class ProtocolFormatException extends ProtocolException {
     public ProtocolFormatException() {
         super();
     }
