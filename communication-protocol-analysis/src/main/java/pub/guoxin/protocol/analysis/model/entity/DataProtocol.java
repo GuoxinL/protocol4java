@@ -34,7 +34,7 @@ public class DataProtocol<T extends ProtocolEntity> implements Serializable {
      */
     private T                        data;
 
-    private ProtocolEntity getProtocolEntity() {
+    private ProtocolEntity toDataProtocol() {
         Class<? extends ProtocolEntity> protocolEntity = this.header.getProtocolEntity();
         Object                          instance       = null;
         try {
@@ -60,12 +60,11 @@ public class DataProtocol<T extends ProtocolEntity> implements Serializable {
                     }
                 }
             }
-
         }
         return (ProtocolEntity) instance;
     }
 
-    public String toHexString(DataProtocol dataProtocol) {
+    public String toHexString() {
         StringBuffer hexStringBuffer = new StringBuffer();
 
         // 数据头
@@ -87,7 +86,6 @@ public class DataProtocol<T extends ProtocolEntity> implements Serializable {
             String hexString   = HexConvertUtils.short2hexString(totalPacket);
             hexStringBuffer.append(hexString);
         }
-
 
         // 数据段
         for (DataProtocolPacket packet : this.packets) {
