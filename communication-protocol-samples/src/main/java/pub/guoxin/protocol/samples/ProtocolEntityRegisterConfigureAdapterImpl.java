@@ -11,7 +11,6 @@ import pub.guoxin.protocol.analysis.model.entity.ProtocolEntitySet;
 @Component
 public class ProtocolEntityRegisterConfigureAdapterImpl extends ProtocolEntityRegisterConfigureAdapter {
 
-
     public static void main(String[] args) {
         ProtocolEntityRegisterConfigureAdapter abstractDataProtocolCode = new ProtocolEntityRegisterConfigureAdapterImpl();
         ProtocolEntitySet                      build                    = abstractDataProtocolCode.build();

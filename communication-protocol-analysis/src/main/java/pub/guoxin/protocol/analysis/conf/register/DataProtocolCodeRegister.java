@@ -3,8 +3,6 @@ package pub.guoxin.protocol.analysis.conf.register;
 import lombok.Getter;
 import pub.guoxin.protocol.analysis.model.entity.ProtocolSet;
 
-;
-
 /**
  * 数据码索引表(code), 枚举类须实现该类
  * <p>
