@@ -6,5 +6,5 @@ package pub.guoxin.protocol.analysis.model.entity;
  * Create by guoxin on 2018/7/8
  */
 public interface ProtocolSerialization {
-    public byte[] serialization();
+    byte[] serialization();
 }

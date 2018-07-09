@@ -54,8 +54,8 @@ public interface DataProtocolConstants {
          * 数据长度 2个字节
          * 数据长度决定 数据段中{data}中能存放的字节数
          */
-        int DATA_LENGTH_START = TYPE_END;
-        int DATA_LENGTH_END   = DATA_LENGTH_START + 2;
+        int ELEMENT_SIZE_START = TYPE_END;
+        int ELEMENT_SIZE_END   = ELEMENT_SIZE_START + 2;
 
         // totalLength 不固定无法指定
     }
@@ -66,5 +66,7 @@ public interface DataProtocolConstants {
     interface Element {
         int ELEMENT_LENGTH_START = BEGINNING_INDEX;
         int ELEMENT_LENGTH_END   = ELEMENT_LENGTH_START + 2;
+
+        // totalLength 不固定无法指定
     }
 }

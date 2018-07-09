@@ -64,7 +64,7 @@ public interface ProtocolEntity {
         String                                       description  = protocolAnnotation.description();
         Class<? extends DataProtocolCallbackService> callback     = callbackAnnotation.callback();
         return DataProtocolHeader.builder()
-                .command(DataProtocolCommand.create(commandIndex, description))
+                .command(DataProtocolIndexCommand.create(commandIndex, description))
 //                .description(description)
                 .version(version).build();
 //                .callback(callback)
@@ -86,10 +86,10 @@ public interface ProtocolEntity {
             if (Objects.isNull(codeIndexAnnotation)) {
                 throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
             }
-            DataProtocolCode dataProtocolCode = DataProtocolCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
+            DataProtocolIndexCode dataProtocolCode = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
 
-            TypeClass        byClass          = TypeClass.findByClass(declaredField.getType());
-            DataProtocolType dataProtocolType = DataProtocolType.create(byClass.getIndex(), declaredField.getType());
+            TypeClass             byClass          = TypeClass.findByClass(declaredField.getType());
+            DataProtocolIndexType dataProtocolType = DataProtocolIndexType.create(byClass.getIndex(), null, declaredField.getType());
 
             DataProtocolPacket build = DataProtocolPacket.builder().code(dataProtocolCode).type(dataProtocolType).build();
             dataProtocolPackets.add(build);

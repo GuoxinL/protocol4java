@@ -1,19 +1,18 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
 import lombok.*;
-import org.apache.commons.codec.DecoderException;
 import pub.guoxin.protocol.analysis.model.TypeClass;
 import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
-import pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants;
-import pub.guoxin.protocol.analysis.utils.*;
+import pub.guoxin.protocol.analysis.utils.ArrayUtils;
+import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-
-import static java.lang.Integer.sum;
+import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
- * 数据段
+ * 协议：数据段
  * <p>
  * Created by guoxin on 18-2-25.
  */
@@ -23,28 +22,78 @@ import static java.lang.Integer.sum;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataProtocolPacket implements Serializable, ProtocolSerialization {
-    private DataProtocolCode              code;
-    private DataProtocolType              type;
+    /**
+     * 字段
+     */
+    private DataProtocolIndexCode         code;
+    /**
+     * 类型
+     */
+    private DataProtocolIndexType         type;
+    /**
+     * 元素数量
+     */
     private Short                         elementSize;
+    /**
+     * 元素集合
+     */
     private DataProtocolPacketElementList elements;
 
-    public DataProtocolPacket(byte[] data, Integer p) {
+    /**
+     * 解析数据
+     *
+     * @param byteBuffer 字节流
+     */
+    public DataProtocolPacket(ByteBuffer byteBuffer) {
         {
-            byte[] bytes     = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.CODE_START), sum(p, DataProtocolConstants.Packet.CODE_END));
-            short  codeIndex = ByteUtil.getShort(bytes);
-            this.code = DataProtocolCode.create(codeIndex, null);
+            short codeIndex = byteBuffer.getShort();
+            this.code = DataProtocolIndexCode.create(codeIndex, null);
+//            byte[] bytes     = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.CODE_START), sum(p, DataProtocolConstants.Packet.CODE_END));
+//            short  codeIndex = ByteUtil.getShort(bytes);
+//            this.code = DataProtocolIndexCode.create(codeIndex, null);
         }
         {
-            byte[] bytes     = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.TYPE_START), sum(p, DataProtocolConstants.Packet.TYPE_END));
-            short  codeIndex = ByteUtil.getShort(bytes);
-            /**
-             * TODO 这里在写TypeConvert时需要重写
-             */
-            this.type = DataProtocolType.create(codeIndex, TypeClass.findByIndex(codeIndex).getClazz());
+            short codeIndex = byteBuffer.getShort();
+            this.type = DataProtocolIndexType.create(codeIndex, null, TypeClass.findByIndex(codeIndex).getClazz());
+//            byte[] bytes     = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.TYPE_START), sum(p, DataProtocolConstants.Packet.TYPE_END));
+//            short  codeIndex = ByteUtil.getShort(bytes);
+//            /*
+//             * TODO 这里在写TypeConvert时需要重写
+//             */
+//            this.type = DataProtocolIndexType.create(codeIndex, null, TypeClass.findByIndex(codeIndex).getClazz());
         }
         {
-            elements = new DataProtocolPacketElementList(data,this.type, this.code,elementSize, p);
+            short elementSize = byteBuffer.getShort();
+            this.elementSize = elementSize;
+//            byte[] bytes       = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.ELEMENT_SIZE_START), sum(p, DataProtocolConstants.Packet.ELEMENT_SIZE_END));
+//            short  elementSize = ByteUtil.getShort(bytes);
+//            this.elementSize = elementSize;
         }
+        {
+            this.elements = new DataProtocolPacketElementList(byteBuffer, this.type, this.code, this.elementSize);
+        }
+    }
+
+
+    public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation) {
+        this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
+        this.type = DataProtocolIndexType.create(
+                TypeClass.findByClass(declaredField.getType()).getIndex(), null, declaredField.getType());
+        this.elements = new DataProtocolPacketElementList(declaredField);
+        this.elementSize = (short) elements.size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataProtocolPacket that = (DataProtocolPacket) o;
+        return Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(elements, that.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, type, elements);
     }
 
     @Override

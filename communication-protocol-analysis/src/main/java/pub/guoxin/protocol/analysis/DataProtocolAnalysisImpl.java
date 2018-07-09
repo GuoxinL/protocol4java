@@ -102,8 +102,8 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
             }
             {
                 // 拼凑长度，拼凑数据
-                Class<?>  value                = packet.getType().getValue();
-                Object    data                 = packet.getData();
+                Class<?>  value                = packet.getType().getType();
+                Object    data                 = null;
                 TypeClass byClass              = TypeClass.findByClass(value);
                 String    dataHexString        = HexConvertUtils.getHexStringByDataType(byClass, data);
                 String    totalLengthHexString = HexConvertUtils.short2hexString((short) (dataHexString.length() / 2));
@@ -135,7 +135,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
                 if (codeIndex == packetCodeIndex) {
                     declaredField.setAccessible(true);
                     try {
-                        declaredField.set(instance, packet.getData());
+                        declaredField.set(instance, /*packet.getData()*/null);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         // TODO 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
@@ -168,9 +168,9 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
                 }
             }
             {
-                byte[] lengthBytes = BytesUtils.createByteArray(data, sum(pointer, Packet.DATA_LENGTH_START), sum(pointer, Packet.DATA_LENGTH_END));
+                byte[] lengthBytes = BytesUtils.createByteArray(data, sum(pointer, Packet.ELEMENT_SIZE_START), sum(pointer, Packet.ELEMENT_SIZE_END));
                 int    dataLength      = ByteUtil.getShort(lengthBytes);
-                byte[] dataBytes = BytesUtils.createByteArray(data, sum(pointer, Packet.DATA_LENGTH_END), sum(pointer, dataLength));
+                byte[] dataBytes = BytesUtils.createByteArray(data, sum(pointer, Packet.ELEMENT_SIZE_END), sum(pointer, dataLength));
                 setInstanceField(protocolPacket, dataBytes);
                 pointer += Packet.TYPE_END + dataLength;
             }
@@ -189,8 +189,8 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
      * @throws DecoderException 类型解析错误
      */
     private void setInstanceField(DataProtocolPacket dataProtocolPacket, byte[] bytes) throws DecoderException {
-        DataProtocolType dataProtocolType = dataProtocolPacket.getType();
-        Class<?>         clazz            = dataProtocolType.getValue();
+        DataProtocolIndexType dataProtocolType = dataProtocolPacket.getType();
+        Class<?>              clazz            = dataProtocolType.getType();
 
         short dataCodeIndex = dataProtocolPacket.getCode().getIndex();
 
@@ -202,7 +202,7 @@ public class DataProtocolAnalysisImpl implements DataProtocolAnalysis {
             if (codeIndex == dataCodeIndex) {
                 TypeClass typeClass  = TypeClass.findByClass(declaredField.getType());
                 Object    fieldValue = HexConvertUtils.getFieldValueByDataType(typeClass, null /*bytes*/);
-                dataProtocolPacket.setData(fieldValue);
+//                dataProtocolPacket.setData(fieldValue);
             }
         }
     }

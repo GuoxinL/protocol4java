@@ -1,25 +1,54 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
+import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
 import pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants;
+import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
 import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
+ * 协议：数据段集合
+ * 其中包含了所有的数据段
+ * <p>
  * Create by guoxin on 2018/7/8
  */
-public class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Serializable, ProtocolSerialization{
+
+public class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Serializable, ProtocolSerialization {
 
     public DataProtocolPacketList(int initialCapacity) {
         super(initialCapacity);
     }
 
-    public DataProtocolPacketList(byte[] bytes, short totalPacket){
+    /**
+     * 解析数据
+     *  @param byteBuffer       字节流
+     * @param totalPacket 数据段数量
+     */
+    public DataProtocolPacketList(ByteBuffer byteBuffer, short totalPacket) {
         this(totalPacket);
-        Integer p = DataProtocolConstants.Packet.CODE_START;
         for (short i = 0; i < totalPacket; i++) {
-            add(new DataProtocolPacket(bytes, p));
+            add(new DataProtocolPacket(byteBuffer));
+        }
+    }
+
+    /**
+     * 加载协议对象
+     *
+     * @param clazz 协议对象class
+     */
+    public DataProtocolPacketList(Class<? extends ProtocolEntity> clazz) {
+        // 拼凑数据段
+        for (Field declaredField : clazz.getDeclaredFields()) {
+            CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
+            if (Objects.isNull(codeIndexAnnotation)) {
+                throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
+            }
+            add(new DataProtocolPacket(declaredField, codeIndexAnnotation));
         }
     }
 

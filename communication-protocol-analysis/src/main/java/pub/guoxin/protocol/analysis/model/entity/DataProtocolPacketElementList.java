@@ -5,9 +5,12 @@ import lombok.NoArgsConstructor;
 import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 /**
+ * 协议：数据段 - 元素集合
  * Create by guoxin on 2018/7/8
  */
 @NoArgsConstructor
@@ -18,11 +21,15 @@ public class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketE
         super(initialCapacity);
     }
 
-    public DataProtocolPacketElementList(byte[] data, DataProtocolType type, DataProtocolCode code, Short elementSize, Integer p) {
+    public DataProtocolPacketElementList(ByteBuffer byteBuffer, DataProtocolIndexType type, DataProtocolIndexCode code, Short elementSize) {
         this(elementSize);
         for (int i = 0; i < elementSize; i++) {
-            add(new DataProtocolPacketElement(data, type, code, p));
+            add(new DataProtocolPacketElement(byteBuffer, type, code));
         }
+    }
+
+    public DataProtocolPacketElementList(Field declaredField){
+        add(new DataProtocolPacketElement(declaredField));
     }
 
     @Override

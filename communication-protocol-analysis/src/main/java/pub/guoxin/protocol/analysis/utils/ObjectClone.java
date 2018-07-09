@@ -31,6 +31,11 @@ public class ObjectClone {
     }
 }
 
+/**
+ * 基本类型
+ * 引用类型
+ * 流的方式，瞬态方式
+ */
 class CloneFieldException extends RuntimeException {
 
     public CloneFieldException(String message, Throwable cause) {
