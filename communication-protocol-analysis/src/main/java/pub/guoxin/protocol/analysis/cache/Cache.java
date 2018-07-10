@@ -9,18 +9,20 @@ public interface Cache<K, V> {
 
     V get(K key);
 
-    Map<K, V> getAllPresent(Iterable<K> keys);
+    Map<K, V> getAllPresent(Iterable<K> keys) throws Exception;
 
     void put(K key, V value);
 
     void putAll(Map<? extends K, ? extends V> m);
 
-    void invalidate(Object key);
+    void invalidate(K key);
 
-    void invalidateAll(Iterable<?> keys);
+    void invalidateAll(Iterable<K> keys) throws Exception;
 
     void invalidateAll();
 
     long size();
+
+    boolean exists(K key);
 
 }
