@@ -5,16 +5,16 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 /**
  * Create by guoxin on 2018/7/9
  */
-public class IntegerTypeConvert implements TypeConvert<Integer> {
+public class DoubleTypeConvert implements TypeConvert<Double> {
 
     @Override
-    public byte[] encode(Integer integer) {
+    public byte[] encode(Double integer) {
         return ByteUtil.getBytes(integer);
     }
 
     @Override
-    public Integer decode(byte[] bytes) {
-        return ByteUtil.getInt(bytes);
+    public Double decode(byte[] bytes) {
+        return ByteUtil.getDouble(bytes);
     }
 
     @Override
@@ -24,6 +24,6 @@ public class IntegerTypeConvert implements TypeConvert<Integer> {
 
     @Override
     public short index() {
-        return 1;
+        return 4;
     }
 }

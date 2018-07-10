@@ -5,25 +5,25 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 /**
  * Create by guoxin on 2018/7/9
  */
-public class IntegerTypeConvert implements TypeConvert<Integer> {
+public class ShortTypeConvert implements TypeConvert<Short> {
 
     @Override
-    public byte[] encode(Integer integer) {
+    public byte[] encode(Short integer) {
         return ByteUtil.getBytes(integer);
     }
 
     @Override
-    public Integer decode(byte[] bytes) {
-        return ByteUtil.getInt(bytes);
+    public Short decode(byte[] bytes) {
+        return ByteUtil.getShort(bytes);
     }
 
     @Override
     public String description() {
-        return "{@link Integer} 整形";
+        return "{@link Integer} 短整形";
     }
 
     @Override
     public short index() {
-        return 1;
+        return 0;
     }
 }

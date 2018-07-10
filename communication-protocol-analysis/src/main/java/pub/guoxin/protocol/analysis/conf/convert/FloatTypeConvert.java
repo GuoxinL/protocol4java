@@ -8,12 +8,12 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class FloatTypeConvert implements TypeConvert<Float> {
 
     @Override
-    public byte[] decode(Float integer) {
+    public byte[] encode(Float integer) {
         return ByteUtil.getBytes(integer);
     }
 
     @Override
-    public Float encode(byte[] bytes) {
+    public Float decode(byte[] bytes) {
         return ByteUtil.getFloat(bytes);
     }
 
@@ -24,6 +24,6 @@ public class FloatTypeConvert implements TypeConvert<Float> {
 
     @Override
     public short index() {
-        return 5;
+        return 3;
     }
 }

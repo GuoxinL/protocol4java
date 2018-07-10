@@ -5,20 +5,20 @@ package pub.guoxin.protocol.analysis.conf.convert;
  */
 public interface TypeConvert<T> {
     /**
-     * 将{@code t}转换为字节流
+     * 将{@code t}解码为字节流
      *
      * @param t obj
      * @return 字节流
      */
-    byte[] decode(T t);
+    byte[] encode(T t);
 
     /**
-     * 将字节流转换为{@link T}
+     * 将字节流编码为{@link T}
      *
      * @param bytes 字节流
      * @return obj
      */
-    T encode(byte[] bytes);
+    T decode(byte[] bytes);
 
     /**
      * 描述

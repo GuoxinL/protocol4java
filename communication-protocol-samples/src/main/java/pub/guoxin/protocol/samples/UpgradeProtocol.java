@@ -20,4 +20,10 @@ public class UpgradeProtocol implements ProtocolEntity {
     private String aaa;
     @CodeIndex(index = 2, description = "bbbbb")
     private String bbb;
+    @CodeIndex(index = 2, description = "ccccc")
+    private int[] ccc;
+    @CodeIndex(index = 2, description = "ddddd")
+    private String[] ddd;
+    @CodeIndex(index = 2, description = "eeeee")
+    private short[] eee;
 }

@@ -8,12 +8,12 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class LongTypeConvert implements TypeConvert<Long> {
 
     @Override
-    public byte[] decode(Long integer) {
+    public byte[] encode(Long integer) {
         return ByteUtil.getBytes(integer);
     }
 
     @Override
-    public Long encode(byte[] bytes) {
+    public Long decode(byte[] bytes) {
         return ByteUtil.getLong(bytes);
     }
 
@@ -24,6 +24,6 @@ public class LongTypeConvert implements TypeConvert<Long> {
 
     @Override
     public short index() {
-        return 4;
+        return 2;
     }
 }

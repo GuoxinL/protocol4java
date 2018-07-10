@@ -8,12 +8,12 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class StringTypeConvert implements TypeConvert<String> {
 
     @Override
-    public byte[] decode(String s) {
+    public byte[] encode(String s) {
         return ByteUtil.getBytes(s);
     }
 
     @Override
-    public String encode(byte[] bytes) {
+    public String decode(byte[] bytes) {
         return ByteUtil.getString(bytes);
     }
 
@@ -24,6 +24,6 @@ public class StringTypeConvert implements TypeConvert<String> {
 
     @Override
     public short index() {
-        return 3;
+        return 6;
     }
 }
