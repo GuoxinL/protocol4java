@@ -1,6 +1,6 @@
-package pub.guoxin.protocol.analysis.cache.util;
+package pub.guoxin.protocol.analysis.conf.cache.util;
 
-import pub.guoxin.protocol.analysis.cache.ConcurrentHashMapCache;
+import pub.guoxin.protocol.analysis.conf.cache.ConcurrentHashMapCache;
 import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
 import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 

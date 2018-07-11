@@ -12,6 +12,10 @@ import java.nio.charset.Charset;
  */
 public class ByteUtil {
 
+    public static byte[] createEmptyByteArray(int begin, int end){
+        return new byte[end - begin];
+    }
+
     public static Object getObject(TypeClass typeClass, byte[] bytes) {
         switch (typeClass) {
             case Byte:
@@ -145,8 +149,8 @@ public class ByteUtil {
         return Double.longBitsToDouble(l);
     }
 
-    public static String getString(byte[] bytes, String charsetName) {
-        return new String(bytes, Charset.forName(charsetName));
+    public static String getString(byte[] bytes, Charset charset) {
+        return new String(bytes, charset);
     }
 
     public static boolean getBoolean(byte[] bytes) {
@@ -158,7 +162,7 @@ public class ByteUtil {
     }
 
     public static String getString(byte[] bytes) {
-        return getString(bytes, "GBK");
+        return getString(bytes, Charset.defaultCharset());
     }
 
     public static void main(String[] args) {
