@@ -1,12 +1,6 @@
 package pub.guoxin.protocol.samples;
 
-import pub.guoxin.protocol.analysis.conf.convert.IntegerTypeConvert;
-import pub.guoxin.protocol.analysis.conf.convert.StringTypeConvert;
-
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -43,7 +37,7 @@ public class Application {
             System.out.println(o.toString());
         }
 
-//        Class<IntegerTypeConvert> integerTypeConvertClass = IntegerTypeConvert.class;
+//        Class<SignedInt2integerTypeConvert> integerTypeConvertClass = SignedInt2integerTypeConvert.class;
 ////        integerTypeConvertClass.getMethod()
     }
 }
