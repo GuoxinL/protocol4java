@@ -3,6 +3,7 @@ package pub.guoxin.protocol.analysis.model.entity;
 import lombok.*;
 import pub.guoxin.protocol.analysis.model.TypeClass;
 import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
+import pub.guoxin.protocol.analysis.model.exception.ProtocolException;
 import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
@@ -18,7 +19,6 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataProtocolPacket implements Serializable, ProtocolSerialization {
@@ -75,13 +75,14 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
     }
 
 
-    public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation) {
+    public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation,ProtocolEntity protocolEntity) {
         this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
         this.type = DataProtocolIndexType.create(
                 TypeClass.findByClass(declaredField.getType()).getIndex(), null, declaredField.getType());
-        this.elements = new DataProtocolPacketElementList(declaredField);
+        this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity);
         this.elementSize = (short) elements.size();
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -115,5 +116,18 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
             result = ArrayUtils.merge(result, bytes);
         }
         return result;
+    }
+
+    public void protocolEntity(Object instance, short codeIndex, Field declaredField) {
+        if (codeIndex == this.getCode().getIndex()) {
+            declaredField.setAccessible(true);
+            try {
+                declaredField.set(instance, /*packet.getData()*/null);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                // TODO 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
+                throw new ProtocolException("如果这个对象正在执行Java语言访问控制 ，并且底层子弹不可访问会出现此错误", e);
+            }
+        }
     }
 }

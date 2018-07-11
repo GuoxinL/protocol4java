@@ -18,7 +18,6 @@ import java.util.Objects;
  * Created by guoxin on 18-2-25.
  */
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataProtocolHeader implements Serializable, ProtocolSerialization {

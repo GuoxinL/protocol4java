@@ -1,10 +1,10 @@
 package pub.guoxin.protocol.analysis.conf.adapter;
 
-import javafx.util.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import pub.guoxin.protocol.analysis.conf.Builder;
+import pub.guoxin.protocol.analysis.conf.entity.ProtocolEntitySet;
 import pub.guoxin.protocol.analysis.conf.register.ProtocolEntityRegister;
-import pub.guoxin.protocol.analysis.model.entity.ProtocolEntitySet;
 
 /**
  * Created by guoxin on 18-3-8.

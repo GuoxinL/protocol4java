@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import pub.guoxin.protocol.analysis.conf.adapter.ProtocolEntityRegisterConfigureAdapter;
+import pub.guoxin.protocol.analysis.conf.entity.ProtocolEntitySet;
 import pub.guoxin.protocol.analysis.model.anno.Protocol;
-import pub.guoxin.protocol.analysis.model.entity.*;
+import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
+import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
 
 import java.util.List;
@@ -18,11 +18,8 @@ import java.util.Objects;
 /**
  * Create by guoxin on 2018/6/14
  */
-@Component
-@Configuration
 public class CommunicationProtocolConfiguraction {
 
-    @Autowired
     private ApplicationContext applicationContext;
 
     /**
@@ -55,7 +52,7 @@ public class CommunicationProtocolConfiguraction {
             if (Objects.isNull(protocolAnnotation)) {
                 throw new ProtocolConfigException("请使用 @Protocol 注解对协议对象进行标注");
             }
-            DataProtocol dataProtocol = ProtocolEntity.toDataProtocol(clazz);
+            DataProtocol dataProtocol = null;
             dataProtocols.add(dataProtocol);
         }
         System.out.println(dataProtocols.toString());

@@ -1,6 +1,7 @@
-package pub.guoxin.protocol.analysis.model.entity;
+package pub.guoxin.protocol.analysis.conf.entity;
 
 import lombok.NoArgsConstructor;
+import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 
 import java.util.Collection;
 

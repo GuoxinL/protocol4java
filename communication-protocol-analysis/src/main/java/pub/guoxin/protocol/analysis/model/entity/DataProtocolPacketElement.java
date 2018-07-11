@@ -58,8 +58,19 @@ public class DataProtocolPacketElement implements Serializable, ProtocolSerializ
 //        this.data = object;
     }
 
-    public DataProtocolPacketElement(Field field) {
-        Class type = field.getType();
+    public DataProtocolPacketElement(Field field, ProtocolEntity protocolEntity) {
+        this.typeClass = TypeClass.findByClass(field.getType());
+        if (!Objects.isNull(protocolEntity)) {
+            // 设置是否允许访问，不是修改原来的访问权限修饰词。
+            field.setAccessible(true);
+            try {
+                // 返回输出指定对象a上此 Field表示的字段名和字段值
+                this.data = field.get(protocolEntity);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                // TODO 以后统一编写异常处理
+            }
+        }
     }
 
     @Override

@@ -28,8 +28,8 @@ public class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketE
         }
     }
 
-    public DataProtocolPacketElementList(Field declaredField){
-        add(new DataProtocolPacketElement(declaredField));
+    public DataProtocolPacketElementList(Field declaredField, ProtocolEntity protocolEntity){
+        add(new DataProtocolPacketElement(declaredField, protocolEntity));
     }
 
     @Override

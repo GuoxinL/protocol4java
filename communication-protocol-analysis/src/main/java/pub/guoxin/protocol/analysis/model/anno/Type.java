@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.analysis.model.anno;
 
+import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
+
 import java.lang.annotation.*;
 
 /**
@@ -10,13 +12,6 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TypeIndex {
-    /**
-     * 索引
-     */
-    short index();
-    /**
-     * 描述
-     */
-    String description() default "";
+public @interface Type {
+    Class<? extends TypeConvert> convert() default TypeConvert.class;
 }
