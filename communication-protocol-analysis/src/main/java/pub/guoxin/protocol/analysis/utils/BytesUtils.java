@@ -21,9 +21,6 @@ public class BytesUtils {
         return data.substring(begin * 2, end * 2);
     }
 
-    public static byte[] createEmptyByteArray(int begin, int end){
-        return new byte[end - begin];
-    }
     /**
      *
      * @param old

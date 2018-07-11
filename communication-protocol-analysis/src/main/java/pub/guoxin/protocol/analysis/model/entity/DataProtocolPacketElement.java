@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pub.guoxin.protocol.analysis.model.TypeClass;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
-import pub.guoxin.protocol.analysis.utils.BytesUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -46,7 +45,7 @@ public class DataProtocolPacketElement implements Serializable, ProtocolSerializ
 //        this.elementLength = elementLength;
         {
             // 解析数据
-            byte[] bytes = BytesUtils.createEmptyByteArray(byteBuffer.position(), this.elementLength);
+            byte[] bytes = ByteUtil.createEmptyByteArray(byteBuffer.position(), this.elementLength);
             byteBuffer.get(bytes);
             Object data = ByteUtil.getObject(this.typeClass, bytes);
             this.data = data;
