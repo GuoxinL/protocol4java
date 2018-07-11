@@ -4,7 +4,6 @@ import javafx.util.Callback;
 import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
 import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolCallbackException;
-import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,7 +31,7 @@ public class DataProtocolCallback implements Callback<ByteBuffer, ByteBuffer> {
         try {
             instance = callback.newInstance();
         } catch (InstantiationException e) {
-//            如果Class{@link Class#newInstance}抽象类，一个接口，一个数组类，一个基本类型或void，则抛出此异常
+            // 如果Class{@link Class#newInstance}抽象类，一个接口，一个数组类，一个基本类型或void，则抛出此异常
             throw new ProtocolCallbackException("实例类型错误", e);
         } catch (IllegalAccessException e) {
             // 如果该类有无效或者不可访问构造函数
