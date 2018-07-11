@@ -1,12 +1,19 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import pub.guoxin.protocol.analysis.model.anno.Typed;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 /**
+ * C Unsigned int to Java {@link Integer}
+ * <p>
  * Create by guoxin on 2018/7/9
  */
-public class IntegerTypeConvert implements TypeConvert<Integer> {
+@Typed(index = 12, numberOfBytes = Integer.SIZE / TypeConvert.BIT, description = "{@link Integer} C Unsigned int to Java Integer")
+public class UnsignedInt2integerTypeConvert implements TypeConvert<Integer> {
 
+    /**
+     * TODO Unsigned
+     */
     @Override
     public byte[] encode(Integer integer) {
         return ByteUtil.getBytes(integer);
@@ -17,13 +24,4 @@ public class IntegerTypeConvert implements TypeConvert<Integer> {
         return ByteUtil.getInt(bytes);
     }
 
-    @Override
-    public String description() {
-        return "{@link Integer} 整形";
-    }
-
-    @Override
-    public short index() {
-        return 1;
-    }
 }

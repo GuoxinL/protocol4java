@@ -4,6 +4,8 @@ package pub.guoxin.protocol.analysis.conf.convert;
  * Create by guoxin on 2018/6/26
  */
 public interface TypeConvert<T> {
+    int BIT = 8;
+
     /**
      * 将{@code t}解码为字节流
      *
@@ -19,15 +21,4 @@ public interface TypeConvert<T> {
      * @return obj
      */
     T decode(byte[] bytes);
-
-    /**
-     * 描述
-     */
-    String description();
-
-    /**
-     * 索引
-     */
-    short index();
-
 }

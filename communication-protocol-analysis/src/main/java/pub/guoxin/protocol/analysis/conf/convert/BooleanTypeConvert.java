@@ -1,10 +1,14 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import pub.guoxin.protocol.analysis.model.anno.Typed;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 /**
+ * C Signed float to Java {@link Boolean}
+ * <p>
  * Create by guoxin on 2018/7/9
  */
+@Typed(index = 6, numberOfBytes = 1, description = "{@link Boolean} C Signed char to Java Boolean")
 public class BooleanTypeConvert implements TypeConvert<Boolean> {
 
     @Override
@@ -17,13 +21,4 @@ public class BooleanTypeConvert implements TypeConvert<Boolean> {
         return ByteUtil.getBoolean(bytes);
     }
 
-    @Override
-    public String description() {
-        return "{@link Integer} 整形";
-    }
-
-    @Override
-    public short index() {
-        return 5;
-    }
 }
