@@ -81,6 +81,8 @@ public class DataProtocol<T extends ProtocolEntity> implements Serializable, Pro
     public ProtocolEntity protocolEntity() {
         Object instance;
         try {
+//            Exception in thread "main" java.lang.NullPointerException
+//            TODO 在解析字节流时，没有找到对应的协议对象，这里涉及到协议对象初始化的问题
             instance = this.protocolEntity.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
