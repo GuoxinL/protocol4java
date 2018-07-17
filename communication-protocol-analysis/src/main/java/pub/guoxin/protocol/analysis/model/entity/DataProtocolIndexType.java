@@ -2,6 +2,7 @@ package pub.guoxin.protocol.analysis.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
 
 import java.io.Serializable;
 
@@ -13,14 +14,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DataProtocolIndexType extends BaseDataProtocolIndex<String> implements Serializable {
 
-    private Class<?> type;
+    private Class<? extends TypeConvert> type;
 
-    public DataProtocolIndexType(short index, String value, Class<?> type) {
+    public DataProtocolIndexType(short index, String value, Class<? extends TypeConvert> type) {
         super(index, value);
         this.type = type;
     }
 
-    public static DataProtocolIndexType create(short index, String value, Class<?> type) {
+    public static DataProtocolIndexType create(short index, String value, Class<? extends TypeConvert> type) {
         return new DataProtocolIndexType(index, value, type);
+    }
+    public static DataProtocolIndexType create(short index, Class<? extends TypeConvert> type) {
+        return create(index, null, type);
     }
 }

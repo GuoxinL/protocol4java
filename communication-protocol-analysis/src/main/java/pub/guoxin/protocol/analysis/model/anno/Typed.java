@@ -44,6 +44,6 @@ public @interface Typed {
     /**
      * 描述
      */
-    String description() default "Type description";
+    String description() default "TypeIndex description";
 
 }

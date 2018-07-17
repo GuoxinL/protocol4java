@@ -21,5 +21,5 @@ public @interface CodeIndex {
     /**
      * 描述
      */
-    String description() default "";
+    String description();
 }

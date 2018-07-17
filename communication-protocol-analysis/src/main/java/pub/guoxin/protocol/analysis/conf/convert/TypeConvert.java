@@ -1,5 +1,9 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import pub.guoxin.protocol.analysis.conf.cache.TypeCache;
+import pub.guoxin.protocol.analysis.model.anno.Typed;
+import pub.guoxin.protocol.analysis.utils.ClassUtils;
+
 /**
  * Create by guoxin on 2018/6/26
  */
@@ -21,4 +25,14 @@ public interface TypeConvert<T> {
      * @return obj
      */
     T decode(byte[] bytes);
+
+    static short getTypeIndex(Class<?> clazz) {
+        return clazz.getAnnotation(Typed.class).index();
+    }
+
+    static TypeCache getTypeCache(Class<? extends TypeConvert> typeConvert, short index) {
+        Class<?>  genericsType = ClassUtils.getGenericsType(typeConvert);
+        TypeCache typeCache    = TypeCache.builder().index(index).typeClass(genericsType).typeConvert(typeConvert).build();
+        return typeCache;
+    }
 }

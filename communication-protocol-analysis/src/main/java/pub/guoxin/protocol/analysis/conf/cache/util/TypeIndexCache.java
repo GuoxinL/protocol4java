@@ -1,24 +1,54 @@
 package pub.guoxin.protocol.analysis.conf.cache.util;
 
 import pub.guoxin.protocol.analysis.conf.cache.ConcurrentHashMapCache;
-import pub.guoxin.protocol.analysis.model.entity.DataProtocolIndexType;
+import pub.guoxin.protocol.analysis.conf.cache.TypeCache;
+import pub.guoxin.protocol.analysis.conf.convert.*;
+import pub.guoxin.protocol.analysis.model.anno.Typed;
+import pub.guoxin.protocol.analysis.utils.ClassUtils;
 
 /**
  * 类型索引缓存
  * <p>
  * Create by guoxin on 2018/7/10
  */
-class TypeIndexCache {
+public class TypeIndexCache {
 
-    private static ConcurrentHashMapCache<Class<?>, DataProtocolIndexType> instance = new ConcurrentHashMapCache<>();
+    private static ConcurrentHashMapCache<Short, TypeCache> instance = new ConcurrentHashMapCache<>();
+
+    static {
+        init();
+    }
 
     private TypeIndexCache() {
+    }
+
+    public static ConcurrentHashMapCache<Short, TypeCache> getInstance() {
+        return instance;
     }
 
     /**
      * 初始化类型索引
      */
-    private void init() {
-//        instance.put();
+    private static void init() {
+        loadTypeConvert(SignedChar2byteTypeConvert.class);
+        loadTypeConvert(SignedShort2shortTypeConvert.class);
+        loadTypeConvert(SignedInt2integerTypeConvert.class);
+        loadTypeConvert(SignedLongLong2longTypeConvert.class);
+        loadTypeConvert(FloatTypeConvert.class);
+        loadTypeConvert(DoubleTypeConvert.class);
+        loadTypeConvert(BooleanTypeConvert.class);
+        loadTypeConvert(StringTypeConvert.class);
+
+        loadTypeConvert(UnsignedChar2byteTypeConvert.class);
+        loadTypeConvert(UnsignedShort2shortTypeConvert.class);
+        loadTypeConvert(UnsignedInt2integerTypeConvert.class);
+        loadTypeConvert(UnsignedLongLong2longTypeConvert.class);
     }
+
+    private static void loadTypeConvert(Class<? extends TypeConvert> clazz) {
+        short     typeIndex = TypeConvert.getTypeIndex(clazz);
+        TypeCache typeCache = TypeConvert.getTypeCache(clazz, typeIndex);
+        instance.put(typeIndex, typeCache);
+    }
+
 }

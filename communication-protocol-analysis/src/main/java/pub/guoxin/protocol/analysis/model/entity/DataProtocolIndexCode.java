@@ -18,4 +18,8 @@ public class DataProtocolIndexCode extends BaseDataProtocolIndex<String> impleme
     public static DataProtocolIndexCode create(short index, String description) {
         return new DataProtocolIndexCode(index, description);
     }
+
+    public static DataProtocolIndexCode create(short codeIndex) {
+        return create(codeIndex, null);
+    }
 }

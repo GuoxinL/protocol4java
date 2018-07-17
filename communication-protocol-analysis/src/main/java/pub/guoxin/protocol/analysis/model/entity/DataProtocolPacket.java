@@ -1,8 +1,14 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
-import lombok.*;
-import pub.guoxin.protocol.analysis.model.TypeClass;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pub.guoxin.protocol.analysis.conf.cache.TypeCache;
+import pub.guoxin.protocol.analysis.conf.cache.util.TypeIndexCache;
+import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
 import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
+import pub.guoxin.protocol.analysis.model.anno.TypeIndex;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolException;
 import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
@@ -47,39 +53,33 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
     public DataProtocolPacket(ByteBuffer byteBuffer) {
         {
             short codeIndex = byteBuffer.getShort();
-            this.code = DataProtocolIndexCode.create(codeIndex, null);
-//            byte[] bytes     = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.CODE_START), sum(p, DataProtocolConstants.Packet.CODE_END));
-//            short  codeIndex = ByteUtil.getShort(bytes);
-//            this.code = DataProtocolIndexCode.create(codeIndex, null);
+            this.code = DataProtocolIndexCode.create(codeIndex);
         }
         {
             short codeIndex = byteBuffer.getShort();
-            this.type = DataProtocolIndexType.create(codeIndex, null, TypeClass.findByIndex(codeIndex).getClazz());
-//            byte[] bytes     = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.TYPE_START), sum(p, DataProtocolConstants.Packet.TYPE_END));
-//            short  codeIndex = ByteUtil.getShort(bytes);
-//            /*
-//             * TODO 这里在写TypeConvert时需要重写
-//             */
-//            this.type = DataProtocolIndexType.create(codeIndex, null, TypeClass.findByIndex(codeIndex).getClazz());
+            TypeCache typeCache = TypeIndexCache.getInstance().get(codeIndex);
+            Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
+            this.type = DataProtocolIndexType.create(codeIndex, typeConvert); // TODO
         }
         {
             short elementSize = byteBuffer.getShort();
             this.elementSize = elementSize;
-//            byte[] bytes       = BytesUtils.createByteArray(data, Integers.sumEqualTo(p, DataProtocolConstants.Packet.ELEMENT_SIZE_START), sum(p, DataProtocolConstants.Packet.ELEMENT_SIZE_END));
-//            short  elementSize = ByteUtil.getShort(bytes);
-//            this.elementSize = elementSize;
         }
         {
-            this.elements = new DataProtocolPacketElementList(byteBuffer, this.type, this.code, this.elementSize);
+            this.elements = new DataProtocolPacketElementList(byteBuffer, this.type.getType(), this.code, this.elementSize);
         }
     }
 
 
-    public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation,ProtocolEntity protocolEntity) {
+    public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation, TypeIndex typeIndexAnnotation, ProtocolEntity protocolEntity) {
         this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
-        this.type = DataProtocolIndexType.create(
-                TypeClass.findByClass(declaredField.getType()).getIndex(), null, declaredField.getType());
-        this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity);
+        boolean  isArray = declaredField.getType().isArray();
+        short    typeIndex = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
+        TypeCache typeCache = TypeIndexCache.getInstance().get(typeIndex);
+        Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
+
+        this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
+        this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert, isArray);
         this.elementSize = (short) elements.size();
     }
 

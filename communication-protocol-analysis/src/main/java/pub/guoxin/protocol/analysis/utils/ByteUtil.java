@@ -1,8 +1,10 @@
 package pub.guoxin.protocol.analysis.utils;
 
+import com.google.common.base.Strings;
 import pub.guoxin.protocol.analysis.model.TypeClass;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 
 /**
@@ -12,7 +14,7 @@ import java.nio.charset.Charset;
  */
 public class ByteUtil {
 
-    public static byte[] createEmptyByteArray(int begin, int end){
+    public static byte[] createEmptyByteArray(int begin, int end) {
         return new byte[end - begin];
     }
 
@@ -165,6 +167,38 @@ public class ByteUtil {
         return getString(bytes, Charset.defaultCharset());
     }
 
+    public static String bytes2hex(byte[] bytes) {
+        StringBuilder buff = new StringBuilder();
+        for (byte aByte : bytes) {
+            String s = Integer.toHexString(aByte);
+            if (s.length() == 1) { // 转换后如果是个位数则前面补零
+                buff.append(0);
+                buff.append(s);
+            } else {
+                buff.append(s);
+            }
+
+        }
+        return buff.toString();
+    }
+
+    public static byte[] hex2bytes(String hexString) {
+        if (Strings.isNullOrEmpty(hexString))
+            return null;
+        hexString = hexString.toLowerCase();
+        final byte[] byteArray = new byte[hexString.length() >> 1];
+        int          index     = 0;
+        for (int i = 0; i < hexString.length(); i++) {
+            if (index > hexString.length() - 1)
+                return byteArray;
+            byte highDit = (byte) (Character.digit(hexString.charAt(index), 16) & 0xFF);
+            byte lowDit  = (byte) (Character.digit(hexString.charAt(index + 1), 16) & 0xFF);
+            byteArray[i] = (byte) (highDit << 4 | lowDit);
+            index += 2;
+        }
+        return byteArray;
+    }
+
     public static void main(String[] args) {
         short  s     = 1;
         byte[] bytes = getBytes(s);
@@ -195,5 +229,11 @@ public class ByteUtil {
 //        System.out.println(getFloat(getBytes(f)));
 //        System.out.println(getDouble(getBytes(d)));
 //        System.out.println(getString(getBytes(string)));
+
+        byte[] bytes1 = new byte[]{127, 127, 2, 3};
+        String s1     = ByteUtil.bytes2hex(bytes1);
+        System.out.println(s1);
+        byte[] bytes2 = ByteUtil.hex2bytes(s1);
+        System.out.println(Arrays.toString(bytes2));
     }
 }
