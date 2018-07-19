@@ -1,9 +1,11 @@
 package pub.guoxin.protocol.samples;
 
+import pub.guoxin.protocol.analysis.conf.cache.DataProtocolCache;
 import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
 import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Create by guoxin on 2018/7/8
@@ -16,13 +18,19 @@ public class Test {
         upgradeProtocol.setBbb("bbbbbbbbbbbb");
         upgradeProtocol.setDdd(new String[] {"dsa","aaa","bbb"});
         upgradeProtocol.setAaa("321312k321312");
-        DataProtocol dataProtocol = new DataProtocol(upgradeProtocol);
-        byte[]       serialization = dataProtocol.serialization();
-        System.out.println(Arrays.toString(serialization));
-        DataProtocol dataProtocol1 = new DataProtocol(serialization);
+        DataProtocol dataProtocol = DataProtocol.analysis(upgradeProtocol.getClass());
+        System.out.println(dataProtocol.toString());
+        DataProtocol dataProtocol1 = new DataProtocol(upgradeProtocol);
         System.out.println(dataProtocol1.toString());
-        ProtocolEntity protocolEntity = dataProtocol1.protocolEntity();
-        System.out.println(protocolEntity.toString());
+        byte[]       serialization = dataProtocol1.serialization();
+        System.out.println(Arrays.toString(serialization));
+        DataProtocol dataProtocol2 = new DataProtocol(serialization);
+        System.out.println(dataProtocol2);
+//        System.out.println(Arrays.toString(serialization));
+//        DataProtocol dataProtocol1 = new DataProtocol(serialization);
+//        System.out.println(dataProtocol1.toString());
+//        ProtocolEntity protocolEntity = dataProtocol1.protocolEntity();
+//        System.out.println(protocolEntity.toString());
 
     }
 }

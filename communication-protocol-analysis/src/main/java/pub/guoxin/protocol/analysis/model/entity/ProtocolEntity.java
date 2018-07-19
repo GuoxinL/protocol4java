@@ -6,4 +6,5 @@ package pub.guoxin.protocol.analysis.model.entity;
  * Create by guoxin on 2018/6/16
  */
 public interface ProtocolEntity {
+
 }

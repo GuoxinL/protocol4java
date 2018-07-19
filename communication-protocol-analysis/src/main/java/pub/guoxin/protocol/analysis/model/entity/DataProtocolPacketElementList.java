@@ -30,7 +30,6 @@ public class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketE
     }
 
     public DataProtocolPacketElementList(Field declaredField, ProtocolEntity protocolEntity, Class<? extends TypeConvert> typeConvert, boolean isArray) {
-        Class<?> type = declaredField.getType();
         Object[] objects;
         if (isArray) {
             Object obj;

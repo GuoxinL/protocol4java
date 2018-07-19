@@ -1,5 +1,8 @@
 package pub.guoxin.protocol.samples;
 
+import pub.guoxin.protocol.analysis.conf.register.adapter.ProtocolEntityRegisterConfigureAdapter;
+import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
+
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -10,42 +13,6 @@ import java.util.Arrays;
 public class Application {
 
     public static void main(String[] args) throws IllegalAccessException {
-
-//        byte[]     bytes  = new byte[]{3, 2, 1, 3, 2, 1, 9, 8, 3, 7, 1, 2, 8, 9, 3, 7, 1, 2, 8, 9, 3, 7, 8, 1, 2, 9, 7, 3, 1, 2};
-//        ByteBuffer wrap   = ByteBuffer.wrap(bytes);
-//        byte[]     abytes = new byte[4];
-//
-//        wrap.get(abytes);
-//        System.out.println(Arrays.toString(abytes));
-//        wrap.get(abytes);
-//
-//        System.out.println(Arrays.toString(abytes));
-//
-//        System.out.println("~~~~~~~~~~~~~~~~~~~~");
-//        UpgradeProtocol upgradeProtocol = new UpgradeProtocol();
-//        upgradeProtocol.setAaa("321312");
-//        upgradeProtocol.setBbb("zncm,asnda");
-//        upgradeProtocol.setCcc(new int[]{1, 2, 23, 3, 4, 5, 5, 6});
-//        upgradeProtocol.setEee(new short[]{1, 2, 23, 3, 4, 5, 5, 6});
-//        upgradeProtocol.setDdd(new String[]{"dsa","dsa"});
-//        Class<? extends UpgradeProtocol> aClass = upgradeProtocol.getClass();
-//        for (Field field : aClass.getDeclaredFields()) {
-//            field.setAccessible(true);
-//            Object o = field.get(upgradeProtocol);
-//            System.out.println(o.toString());
-//            if (field.getType().isArray()) {
-//                Class<?> componentType = field.getType().getComponentType();
-//                Class<?> type = field.getType();
-//                System.out.println(componentType);
-//                System.out.println(type);
-//            } else {
-//                Class<?> type = field.getType();
-//                System.out.println(type);
-//            }
-//        }
-
-//        Class<SignedInt2integerTypeConvert> integerTypeConvertClass = SignedInt2integerTypeConvert.class;
-////        integerTypeConvertClass.getMethod()
 
         System.out.println(byte.class);
         System.out.println(short.class);
@@ -115,5 +82,20 @@ public class Application {
         System.out.println(Double[].class.getComponentType());
         System.out.println(Character[].class.getComponentType());
         System.out.println(Boolean[].class.getComponentType());
+
+        System.out.println("ggggggggggggggggggggggggggggggggggggggggggggggggg");
+        ProtocolEntityRegisterConfigureAdapter registerConfigureAdapter = new ProtocolEntityRegisterConfigureAdapterImpl();
+        registerConfigureAdapter.register(null);
+        UpgradeProtocol upgradeProtocol = new UpgradeProtocol();
+        upgradeProtocol.setEee(new short[] {1,2,3,4,5});
+        upgradeProtocol.setCcc(new int[]{5,4,3,2,1});
+        upgradeProtocol.setBbb("bbbbbbbbbbbb");
+        upgradeProtocol.setDdd(new String[] {"dsa","aaa","bbb"});
+        upgradeProtocol.setAaa("321312k321312");
+        DataProtocol dataProtocol1 = new DataProtocol(upgradeProtocol);
+        byte[]       serialization = dataProtocol1.serialization();
+        System.out.println(Arrays.toString(serialization));
+        DataProtocol dataProtocol2 = new DataProtocol(serialization);
+        System.out.println(dataProtocol2);
     }
 }

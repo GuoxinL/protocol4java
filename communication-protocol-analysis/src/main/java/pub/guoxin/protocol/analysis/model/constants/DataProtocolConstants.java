@@ -19,7 +19,7 @@ public interface DataProtocolConstants {
          * 命令 2个字节
          */
         int COMMAND_START      = BEGINNING_INDEX;
-        int COMMAND_END        = COMMAND_START + 2;
+        int COMMAND_END        = COMMAND_START + 1;
         /**
          * 版本 2个字节
          */

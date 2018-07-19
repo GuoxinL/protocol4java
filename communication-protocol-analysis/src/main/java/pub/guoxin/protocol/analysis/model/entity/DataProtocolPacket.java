@@ -1,11 +1,8 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pub.guoxin.protocol.analysis.conf.cache.TypeCache;
-import pub.guoxin.protocol.analysis.conf.cache.util.TypeIndexCache;
+import pub.guoxin.protocol.analysis.conf.cache.TypeIndexCache;
 import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
 import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
 import pub.guoxin.protocol.analysis.model.anno.TypeIndex;
@@ -25,6 +22,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataProtocolPacket implements Serializable, ProtocolSerialization {
@@ -56,8 +54,8 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
             this.code = DataProtocolIndexCode.create(codeIndex);
         }
         {
-            short codeIndex = byteBuffer.getShort();
-            TypeCache typeCache = TypeIndexCache.getInstance().get(codeIndex);
+            short                        codeIndex   = byteBuffer.getShort();
+            TypeCache                    typeCache   = TypeIndexCache.getInstance().get(codeIndex);
             Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
             this.type = DataProtocolIndexType.create(codeIndex, typeConvert); // TODO
         }
@@ -73,14 +71,16 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
 
     public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation, TypeIndex typeIndexAnnotation, ProtocolEntity protocolEntity) {
         this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
-        boolean  isArray = declaredField.getType().isArray();
-        short    typeIndex = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
-        TypeCache typeCache = TypeIndexCache.getInstance().get(typeIndex);
+        boolean                      isArray     = declaredField.getType().isArray();
+        short                        typeIndex   = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
+        TypeCache                    typeCache   = TypeIndexCache.getInstance().get(typeIndex);
         Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
 
         this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
-        this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert, isArray);
-        this.elementSize = (short) elements.size();
+        if (Objects.nonNull(protocolEntity)) {
+            this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert, isArray);
+            this.elementSize = (short) elements.size();
+        }
     }
 
 

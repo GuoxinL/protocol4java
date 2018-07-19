@@ -1,9 +1,6 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pub.guoxin.protocol.analysis.model.anno.Protocol;
 import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
@@ -18,6 +15,7 @@ import java.util.Objects;
  * Created by guoxin on 18-2-25.
  */
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataProtocolHeader implements Serializable, ProtocolSerialization {
@@ -35,23 +33,14 @@ public class DataProtocolHeader implements Serializable, ProtocolSerialization {
         {
             short commandIndex = byteBuffer.getShort();
             this.command = DataProtocolIndexCommand.create(commandIndex, null);
-//            this.command = DataProtocolIndexCommand.create(commandCode, null); byte[] bytes       = BytesUtils.createByteArray(data, DataProtocolConstants.Header.COMMAND_START, DataProtocolConstants.Header.COMMAND_END);
-//            short  commandCode = ByteUtil.getShort(bytes);
-//            this.command = DataProtocolIndexCommand.create(commandCode, null);
         }
         {
             short version = byteBuffer.getShort();
             this.version = version;
-//            byte[] bytes   = BytesUtils.createByteArray(data, DataProtocolConstants.Header.VERSION_START, DataProtocolConstants.Header.VERSION_END);
-//            short  version = ByteUtil.getShort(bytes);
-//            this.version = version;
         }
         {
             short totalPacket = byteBuffer.getShort();
             this.totalPacket = totalPacket;
-//            byte[] bytes       = BytesUtils.createByteArray(data, DataProtocolConstants.Header.TOTAL_PACKET_START, DataProtocolConstants.Header.TOTAL_PACKET_END);
-//            short  totalPacket = ByteUtil.getShort(bytes);
-//            this.totalPacket = totalPacket;
         }
 
     }
@@ -60,6 +49,7 @@ public class DataProtocolHeader implements Serializable, ProtocolSerialization {
         short  commandIndex = protocol.commandIndex();
         String description  = protocol.description();
         this.command = DataProtocolIndexCommand.create(commandIndex, description);
+        this.version = protocol.version();
     }
 
     @Override
