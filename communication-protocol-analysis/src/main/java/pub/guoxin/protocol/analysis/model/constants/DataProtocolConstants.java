@@ -24,16 +24,12 @@ public interface DataProtocolConstants {
          * 版本 2个字节
          */
         int VERSION_START      = COMMAND_END;
-        int VERSION_END        = VERSION_START + 2;
-        /**
-         * 数据段数量 2个字节
-         */
-        int TOTAL_PACKET_START = VERSION_END;
-        int TOTAL_PACKET_END   = TOTAL_PACKET_START + 2;
+        int VERSION_END        = VERSION_START + 1;
+
         /**
          * 协议头 总长度
          */
-        int TOTAL_LENGTH       = COMMAND_END;
+        int TOTAL_LENGTH       = VERSION_END;
     }
 
     /**
@@ -44,28 +40,32 @@ public interface DataProtocolConstants {
          * 数据码 2个字节
          */
         int CODE_START        = BEGINNING_INDEX;
-        int CODE_END          = CODE_START + 2;
+        int CODE_END          = CODE_START + 1;
         /**
          * 数据类型 1个字节
          */
         int TYPE_START        = CODE_END;
         int TYPE_END          = TYPE_START + 1;
         /**
-         * 数据长度 2个字节
-         * 数据长度决定 数据段中{data}中能存放的字节数
+         * 数据段数量 2个字节
          */
-        int ELEMENT_SIZE_START = TYPE_END;
-        int ELEMENT_SIZE_END   = ELEMENT_SIZE_START + 2;
-
-        // totalLength 不固定无法指定
+        int TOTAL_PACKET_START = TYPE_END;
+        int TOTAL_PACKET_END   = TOTAL_PACKET_START + 1;
     }
 
     /**
      * 元素
      */
     interface Element {
-        int ELEMENT_LENGTH_START = BEGINNING_INDEX;
-        int ELEMENT_LENGTH_END   = ELEMENT_LENGTH_START + 2;
+        /**
+         * 数据长度 2个字节
+         * 数据长度决定 数据段中{data}中能存放的字节数
+         */
+        int SIZE_START = BEGINNING_INDEX;
+        int SIZE_END   = SIZE_START + 2;
+
+        int LENGTH_START = SIZE_END;
+        int LENGTH_END   = LENGTH_START + 2;
 
         // totalLength 不固定无法指定
     }
