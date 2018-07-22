@@ -1,18 +1,21 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import pub.guoxin.protocol.analysis.conf.cache.TypeCache;
 import pub.guoxin.protocol.analysis.conf.cache.TypeIndexCache;
 import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
 import pub.guoxin.protocol.analysis.model.anno.CodeIndex;
 import pub.guoxin.protocol.analysis.model.anno.TypeIndex;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolException;
-import pub.guoxin.protocol.analysis.utils.ArrayUtils;
-import pub.guoxin.protocol.analysis.utils.ByteUtil;
+import pub.guoxin.protocol.analysis.model.exception.TypeCacheNotFoundException;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -20,12 +23,13 @@ import java.util.Objects;
  * <p>
  * Created by guoxin on 18-2-25.
  */
+@Slf4j
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataProtocolPacket implements Serializable, ProtocolSerialization {
+class DataProtocolPacket implements Serializable, ProtocolSerialization {
     /**
      * 字段
      */
@@ -35,10 +39,6 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
      */
     private DataProtocolIndexType         type;
     /**
-     * 元素数量
-     */
-    private Short                         elementSize;
-    /**
      * 元素集合
      */
     private DataProtocolPacketElementList elements;
@@ -46,43 +46,50 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
     /**
      * 解析数据
      *
-     * @param byteBuffer 字节流
+     * @param byteBuf 字节流
      */
-    public DataProtocolPacket(ByteBuffer byteBuffer) {
+    DataProtocolPacket(ByteBuf byteBuf) {
         {
-            short codeIndex = byteBuffer.getShort();
+            int codeIndex = byteBuf.readUnsignedByte();
             this.code = DataProtocolIndexCode.create(codeIndex);
+            log.debug("codeIndex readerIndex:{}", byteBuf.readerIndex());
         }
         {
-            short                        codeIndex   = byteBuffer.getShort();
-            TypeCache                    typeCache   = TypeIndexCache.getInstance().get(codeIndex);
+            int       typeIndex = byteBuf.readUnsignedByte();
+            log.debug("typeIndex readerIndex:{}", byteBuf.readerIndex());
+
+            TypeCache typeCache = TypeIndexCache.getInstance().get(typeIndex);
+            if (Objects.isNull(typeCache)) {
+                throw new TypeCacheNotFoundException("typeIndex " + typeIndex + ", TypeConvert Not found!");
+            }
             Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
-            this.type = DataProtocolIndexType.create(codeIndex, typeConvert); // TODO
+            this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
         }
         {
-            short elementSize = byteBuffer.getShort();
-            this.elementSize = elementSize;
-        }
-        {
-            this.elements = new DataProtocolPacketElementList(byteBuffer, this.type.getType(), this.code, this.elementSize);
+            this.elements = new DataProtocolPacketElementList(byteBuf, this.type.getType(), this.code);
         }
     }
 
-
-    public DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation, TypeIndex typeIndexAnnotation, ProtocolEntity protocolEntity) {
+    DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation, TypeIndex typeIndexAnnotation, ProtocolEntity protocolEntity) {
         this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
         boolean                      isArray     = declaredField.getType().isArray();
-        short                        typeIndex   = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
+        int                          typeIndex   = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
         TypeCache                    typeCache   = TypeIndexCache.getInstance().get(typeIndex);
         Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
 
         this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
         if (Objects.nonNull(protocolEntity)) {
             this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert, isArray);
-            this.elementSize = (short) elements.size();
         }
     }
 
+    public static void main(String[] args) {
+        int     unsignedShort = 65700;
+        ByteBuf byteBuf       = Unpooled.buffer();
+        byteBuf.writeShort(unsignedShort);
+        byte[] bytes = ByteBufUtil.getBytes(byteBuf);
+        System.out.println(Arrays.toString(bytes));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -98,27 +105,22 @@ public class DataProtocolPacket implements Serializable, ProtocolSerialization {
     }
 
     @Override
-    public byte[] serialization() {
-        byte[] result;
+    public void serialization(ByteBuf byteBuf) {
         {
-            result = ByteUtil.getBytes(this.code.getIndex());
+            byteBuf.writeByte(this.code.getIndex());
+            log.debug("code writerIndex: {}", byteBuf.writerIndex());
         }
         {
-            byte[] bytes = ByteUtil.getBytes(this.type.getIndex());
-            result = ArrayUtils.merge(result, bytes);
+            byteBuf.writeByte(this.type.getIndex());
+            log.debug("type writerIndex: {}", byteBuf.writerIndex());
         }
         {
-            byte[] bytes = ByteUtil.getBytes(this.elementSize);
-            result = ArrayUtils.merge(result, bytes);
+            elements.serialization(byteBuf);
+            log.debug("elements writerIndex: {}", byteBuf.writerIndex());
         }
-        {
-            byte[] bytes = elements.serialization();
-            result = ArrayUtils.merge(result, bytes);
-        }
-        return result;
     }
 
-    public void protocolEntity(Object instance, short codeIndex, Field declaredField) {
+    void protocolEntity(Object instance, short codeIndex, Field declaredField) {
         if (codeIndex == this.getCode().getIndex()) {
             declaredField.setAccessible(true);
             try {

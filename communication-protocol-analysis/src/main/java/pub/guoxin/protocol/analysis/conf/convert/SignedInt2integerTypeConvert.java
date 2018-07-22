@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
@@ -12,13 +14,14 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class SignedInt2integerTypeConvert implements TypeConvert<Integer> {
 
     @Override
-    public byte[] encode(Integer integer) {
-        return ByteUtil.getBytes(integer);
+    public ByteBuf encode(Integer integer) {
+        ByteBuf byteBuf = Unpooled.copyInt(integer);
+        return byteBuf;
     }
 
     @Override
-    public Integer decode(byte[] bytes) {
-        return ByteUtil.getInt(bytes);
+    public Integer decode(ByteBuf byteBuf) {
+        return byteBuf.getInt(0);
     }
 
 }

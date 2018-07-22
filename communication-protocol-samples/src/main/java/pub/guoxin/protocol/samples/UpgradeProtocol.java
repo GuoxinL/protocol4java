@@ -17,22 +17,22 @@ import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
  */
 @Getter
 @Setter
-@Protocol(commandIndex = 1, version = 1)
+@Protocol(commandIndex = 1, version = 20)
 @Callback(callback = DataProtocolCallbackService.class)
 public class UpgradeProtocol implements ProtocolEntity {
     @TypeIndex(convert = StringTypeConvert.class)
-    @CodeIndex(index = 1, description = "aaaaa")
+    @CodeIndex(index = 0, description = "aaaaa")
     private String   aaa;
     @TypeIndex(convert = StringTypeConvert.class)
-    @CodeIndex(index = 2, description = "bbbbb")
+    @CodeIndex(index = 1, description = "bbbbb")
     private String   bbb;
     @CodeIndex(index = 2, description = "ccccc")
     @TypeIndex(convert = SignedInt2integerTypeConvert.class)
     private int[]    ccc;
-    @CodeIndex(index = 2, description = "ddddd")
+    @CodeIndex(index = 3, description = "ddddd")
     @TypeIndex(convert = StringTypeConvert.class)
     private String[] ddd;
-    @CodeIndex(index = 2, description = "eeeee")
+    @CodeIndex(index = 4, description = "eeeee")
     @TypeIndex(convert = SignedShort2shortTypeConvert.class)
     private short[]  eee;
 }

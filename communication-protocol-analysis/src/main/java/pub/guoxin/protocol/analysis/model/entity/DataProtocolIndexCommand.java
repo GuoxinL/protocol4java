@@ -13,11 +13,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DataProtocolIndexCommand extends BaseDataProtocolIndex<String> implements Serializable {
 
-    public DataProtocolIndexCommand(short index, String description) {
+    private DataProtocolIndexCommand(int index, String description) {
         super(index, description);
     }
 
-    public static DataProtocolIndexCommand create(short index, String description) {
-        return new DataProtocolIndexCommand(index, description);
+    public static DataProtocolIndexCommand create(int commandIndex, String description) {
+        return new DataProtocolIndexCommand(commandIndex, description);
+    }
+
+    public static DataProtocolIndexCommand create(int commandIndex) {
+        return create(commandIndex, null);
     }
 }

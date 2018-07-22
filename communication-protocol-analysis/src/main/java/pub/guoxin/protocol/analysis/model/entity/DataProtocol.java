@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import lombok.*;
 import pub.guoxin.protocol.analysis.conf.cache.DataProtocolCache;
 import pub.guoxin.protocol.analysis.model.DataProtocolCallbackService;
@@ -8,10 +10,8 @@ import pub.guoxin.protocol.analysis.model.anno.Protocol;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolException;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolNotFoundException;
-import pub.guoxin.protocol.analysis.utils.ArrayUtils;
 
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -52,11 +52,11 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
      * @param bytes 字节流
      */
     public DataProtocol(byte[] bytes) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        analysis(byteBuffer);
+        ByteBuf byteBuf = Unpooled.copiedBuffer(bytes);
+        analysis(byteBuf);
     }
 
-    public DataProtocol(ByteBuffer byteBuffer) {
+    public DataProtocol(ByteBuf byteBuffer) {
         analysis(byteBuffer);
     }
 
@@ -85,8 +85,8 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
         }
         this.protocolEntity = clazz;
         this.callback = callbackAnnotation.callback();
-        this.header = new DataProtocolHeader(protocolAnnotation);
         this.packets = new DataProtocolPacketList(clazz, protocolEntity);
+        this.header = new DataProtocolHeader(protocolAnnotation);
         this.instance = Objects.nonNull(protocolEntity);
     }
 
@@ -97,19 +97,18 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
      * @return
      */
     public static DataProtocol analysis(Class<? extends ProtocolEntity> clazz) {
-        DataProtocol dataProtocol = new DataProtocol(clazz, null);
-        return dataProtocol;
+        return new DataProtocol(clazz, null);
     }
 
-    public void analysis(ByteBuffer byteBuffer) {
-        this.header = new DataProtocolHeader(byteBuffer);
+    public void analysis(ByteBuf byteBuf) {
+        this.header = new DataProtocolHeader(byteBuf);
         DataProtocol dataProtocol = DataProtocolCache.getInstance().get(header.getCommand().getIndex());
         if (Objects.isNull(dataProtocol)) {
             throw new ProtocolNotFoundException("该协议未找到！");
         }
         this.protocolEntity = dataProtocol.getProtocolEntity();
         this.callback = dataProtocol.getCallback();
-        this.packets = new DataProtocolPacketList(byteBuffer, this.header.getTotalPacket());
+        this.packets = new DataProtocolPacketList(byteBuf);
     }
 
     public ProtocolEntity protocolEntity() {
@@ -141,16 +140,15 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
     /**
      * 协议对象
      *
-     * @return 字节流
+     * @param byteBuf 字节流
      */
     @Override
-    public byte[] serialization() {
+    public void serialization(ByteBuf byteBuf) {
         if (!this.instance) {
             throw new ProtocolException("该协议适配对象，不是实例不可以序列化");
         }
-        byte[] headerBytes  = this.header.serialization();
-        byte[] packetsBytes = this.packets.serialization();
-        return ArrayUtils.merge(headerBytes, packetsBytes);
+        this.header.serialization(byteBuf);
+        this.packets.serialization(byteBuf);
     }
 
 }

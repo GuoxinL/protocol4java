@@ -1,27 +1,29 @@
 package pub.guoxin.protocol.analysis.model.entity;
 
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
-import pub.guoxin.protocol.analysis.utils.ByteUtil;
+import pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants;
 import pub.guoxin.protocol.analysis.utils.ClassUtils;
 
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
  * 协议：数据段 - 元素
  * Create by guoxin on 2018/7/8
  */
-@NoArgsConstructor
+@Slf4j
 @Getter
-public class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
+@NoArgsConstructor
+class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
 
     /**
      * 元素长度
      */
-    private short                        elementLength;
+    private int                          elementLength;
     /**
      * 元素数据
      */
@@ -31,25 +33,24 @@ public class DataProtocolPacketElement implements Serializable, ProtocolSerializ
      */
     private Class<? extends TypeConvert> typeClass;
 
-
-    public DataProtocolPacketElement(Object object, Class<? extends TypeConvert> typeConvert) {
+    DataProtocolPacketElement(Object object, Class<? extends TypeConvert> typeConvert) {
         this.data = object;
         this.typeClass = typeConvert;
     }
 
-    public DataProtocolPacketElement(ByteBuffer byteBuffer, Class<? extends TypeConvert> type, DataProtocolIndexCode code) {
+    DataProtocolPacketElement(ByteBuf byteBuf, Class<? extends TypeConvert> type, DataProtocolIndexCode code) {
         this.typeClass = type;
         {
             // 解析长度
-            short elementLength = byteBuffer.getShort();
-            this.elementLength = elementLength;
+            this.elementLength = byteBuf.readUnsignedByte();
+            log.debug("elementLength readerIndex:{}", byteBuf.readerIndex());
         }
         {
+            ByteBuf elementByteBuf = byteBuf.readBytes(this.elementLength);
+            log.debug("elementData readerIndex:{}", byteBuf.readerIndex());
             // 解析数据
-            byte[] bytes = ByteUtil.createEmptyByteArray(byteBuffer.position(), this.elementLength);
-            byteBuffer.get(bytes);
             // T decode(byte[] bytes);
-            Object data = ClassUtils.methodInvoke(this.typeClass, "decode", byte[].class, bytes);
+            Object data = ClassUtils.methodInvoke(this.typeClass, "decode", ByteBuf.class, elementByteBuf);
             this.data = data;
         }
     }
@@ -68,13 +69,20 @@ public class DataProtocolPacketElement implements Serializable, ProtocolSerializ
     }
 
     @Override
-    public byte[] serialization() {
+    public void serialization(ByteBuf byteBuf) {
         // byte[] encode(T t);
-        Object data  = ClassUtils.methodInvoke(this.typeClass, "encode", Object.class, this.data);
-        byte[] bytes = (byte[]) data;
-        this.elementLength = (short) bytes.length;
-        return bytes;
-    }
+        Object  data        = ClassUtils.methodInvoke(this.typeClass, "encode", Object.class, this.data);
+        ByteBuf dataByteBuf = (ByteBuf) data;
 
+        // 先写入长度
+        this.elementLength = dataByteBuf.writerIndex();
+        byteBuf.writeShort(this.elementLength);
+        log.debug("elementLength writerIndex:{}", byteBuf.writerIndex());
+
+        // 在写入数据
+        byteBuf.writeBytes(dataByteBuf);
+        log.debug("elementData writerIndex:{}", byteBuf.writerIndex());
+
+    }
 
 }

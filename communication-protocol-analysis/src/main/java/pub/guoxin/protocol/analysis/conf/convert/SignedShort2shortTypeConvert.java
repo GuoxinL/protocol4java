@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
@@ -12,13 +14,15 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class SignedShort2shortTypeConvert implements TypeConvert<Short> {
 
     @Override
-    public byte[] encode(Short s) {
-        return ByteUtil.getBytes(s);
+    public ByteBuf encode(Short s) {
+        ByteBuf byteBuf = Unpooled.copyShort(s);
+        return byteBuf;
     }
 
     @Override
-    public Short decode(byte[] bytes) {
-        return ByteUtil.getShort(bytes);
+    public Short decode(ByteBuf bytes) {
+        short aShort = bytes.getShort(0);
+        return aShort;
     }
 
 }

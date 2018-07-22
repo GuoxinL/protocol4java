@@ -1,11 +1,11 @@
 package pub.guoxin.protocol.samples;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.conf.register.ProtocolEntityRegister;
-import pub.guoxin.protocol.analysis.conf.register.adapter.ProtocolEntityRegisterConfigureAdapter;
 import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
 
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -94,9 +94,11 @@ public class Application {
         upgradeProtocol.setDdd(new String[] {"dsa","aaa","bbb"});
         upgradeProtocol.setAaa("321312k321312");
         DataProtocol dataProtocol1 = new DataProtocol(upgradeProtocol);
-        byte[]       serialization = dataProtocol1.serialization();
-        System.out.println(Arrays.toString(serialization));
-        DataProtocol dataProtocol2 = new DataProtocol(serialization);
+        ByteBuf      buffer        = Unpooled.buffer();
+        dataProtocol1.serialization(buffer);
+
+        System.out.println(Arrays.toString(ByteBufUtil.getBytes(buffer)));
+        DataProtocol dataProtocol2 = new DataProtocol(buffer);
         System.out.println(dataProtocol2);
     }
 }

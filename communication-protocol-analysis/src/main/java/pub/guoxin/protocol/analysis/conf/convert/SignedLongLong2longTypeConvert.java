@@ -1,7 +1,8 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
-import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 /**
  * C Signed long long to Java {@link Long}
@@ -12,13 +13,15 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class SignedLongLong2longTypeConvert implements TypeConvert<Long> {
 
     @Override
-    public byte[] encode(Long l) {
-        return ByteUtil.getBytes(l);
+    public ByteBuf encode(Long l) {
+        ByteBuf byteBuf = Unpooled.copyLong(l);
+        return byteBuf;
     }
 
     @Override
-    public Long decode(byte[] bytes) {
-        return ByteUtil.getLong(bytes);
+    public Long decode(ByteBuf byteBuf) {
+        long aLong = byteBuf.getLong(0);
+        return aLong;
     }
 
 }

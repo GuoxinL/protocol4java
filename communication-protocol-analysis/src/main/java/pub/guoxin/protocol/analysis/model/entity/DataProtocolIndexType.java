@@ -16,15 +16,16 @@ public class DataProtocolIndexType extends BaseDataProtocolIndex<String> impleme
 
     private Class<? extends TypeConvert> type;
 
-    public DataProtocolIndexType(short index, String value, Class<? extends TypeConvert> type) {
+    private DataProtocolIndexType(int index, String value, Class<? extends TypeConvert> type) {
         super(index, value);
         this.type = type;
     }
 
-    public static DataProtocolIndexType create(short index, String value, Class<? extends TypeConvert> type) {
+    public static DataProtocolIndexType create(int index, String value, Class<? extends TypeConvert> type) {
         return new DataProtocolIndexType(index, value, type);
     }
-    public static DataProtocolIndexType create(short index, Class<? extends TypeConvert> type) {
+
+    public static DataProtocolIndexType create(int index, Class<? extends TypeConvert> type) {
         return create(index, null, type);
     }
 }

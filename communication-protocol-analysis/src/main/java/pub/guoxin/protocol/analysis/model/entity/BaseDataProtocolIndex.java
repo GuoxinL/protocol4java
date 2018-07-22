@@ -15,8 +15,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @ToString
 public abstract class BaseDataProtocolIndex<V> {
-    private short index;
-    private V     value;
+    private int index;
+    private V   value;
 
     @Override
     public boolean equals(Object o) {

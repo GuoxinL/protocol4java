@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
@@ -12,13 +14,22 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class DoubleTypeConvert implements TypeConvert<Double> {
 
     @Override
-    public byte[] encode(Double integer) {
-        return ByteUtil.getBytes(integer);
+    public ByteBuf encode(Double d) {
+        ByteBuf byteBuf = Unpooled.copyDouble(d);
+        return byteBuf;
     }
 
     @Override
-    public Double decode(byte[] bytes) {
-        return ByteUtil.getDouble(bytes);
+    public Double decode(ByteBuf byteBuf) {
+        double aDouble = byteBuf.getDouble(0);
+        return aDouble;
     }
 
+    public static void main(String[] args) {
+        double d = 11111111111.1111111111111;
+        ByteBuf byteBuf = Unpooled.copyDouble(d);
+        double  aDouble = byteBuf.getDouble(0);
+        System.out.println(aDouble);
+        assert d == aDouble;
+    }
 }

@@ -10,7 +10,7 @@ import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
 @Builder
 @Getter
 public class TypeCache {
-    private short                        index;
+    private int                          index;
     private Class<?>                     typeClass;
     private Class<? extends TypeConvert> typeConvert;
 }

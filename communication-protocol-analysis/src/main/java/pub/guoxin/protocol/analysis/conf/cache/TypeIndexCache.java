@@ -1,10 +1,6 @@
 package pub.guoxin.protocol.analysis.conf.cache;
 
-import pub.guoxin.protocol.analysis.conf.cache.ConcurrentHashMapCache;
-import pub.guoxin.protocol.analysis.conf.cache.TypeCache;
 import pub.guoxin.protocol.analysis.conf.convert.*;
-import pub.guoxin.protocol.analysis.model.anno.Typed;
-import pub.guoxin.protocol.analysis.utils.ClassUtils;
 
 /**
  * 类型索引缓存
@@ -13,7 +9,7 @@ import pub.guoxin.protocol.analysis.utils.ClassUtils;
  */
 public class TypeIndexCache {
 
-    private static ConcurrentHashMapCache<Short, TypeCache> instance = new ConcurrentHashMapCache<>();
+    private static ConcurrentHashMapCache<Integer, TypeCache> instance = new ConcurrentHashMapCache<>();
 
     static {
         init();
@@ -22,7 +18,7 @@ public class TypeIndexCache {
     private TypeIndexCache() {
     }
 
-    public static ConcurrentHashMapCache<Short, TypeCache> getInstance() {
+    public static ConcurrentHashMapCache<Integer, TypeCache> getInstance() {
         return instance;
     }
 
@@ -42,11 +38,12 @@ public class TypeIndexCache {
         loadTypeConvert(UnsignedChar2byteTypeConvert.class);
         loadTypeConvert(UnsignedShort2shortTypeConvert.class);
         loadTypeConvert(UnsignedInt2integerTypeConvert.class);
-        loadTypeConvert(UnsignedLongLong2longTypeConvert.class);
+        // TODO 有时间回来写
+//        loadTypeConvert(UnsignedLongLong2longTypeConvert.class);
     }
 
     private static void loadTypeConvert(Class<? extends TypeConvert> clazz) {
-        short     typeIndex = TypeConvert.getTypeIndex(clazz);
+        int       typeIndex = TypeConvert.getTypeIndex(clazz);
         TypeCache typeCache = TypeConvert.getTypeCache(clazz, typeIndex);
         instance.put(typeIndex, typeCache);
     }

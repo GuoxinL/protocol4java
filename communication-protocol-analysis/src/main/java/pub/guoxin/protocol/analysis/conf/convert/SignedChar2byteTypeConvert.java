@@ -1,7 +1,8 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
-import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 /**
  * C Signed char to Java {@link Byte}
@@ -11,12 +12,14 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 @Typed(index = 0, numberOfBytes = Byte.SIZE / TypeConvert.BIT, description = "{@link Byte} C Signed char to Java Byte")
 public class SignedChar2byteTypeConvert implements TypeConvert<Byte> {
     @Override
-    public byte[] encode(Byte b) {
-        return ByteUtil.getBytes(b);
+    public ByteBuf encode(Byte b) {
+        ByteBuf byteBuf = Unpooled.copiedBuffer(new byte[]{b});
+        return byteBuf;
     }
 
     @Override
-    public Byte decode(byte[] bytes) {
-        return bytes[0];
+    public Byte decode(ByteBuf byteBuf) {
+        byte aByte = byteBuf.getByte(0);
+        return aByte;
     }
 }

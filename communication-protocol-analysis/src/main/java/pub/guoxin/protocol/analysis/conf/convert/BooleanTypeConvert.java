@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
 import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
@@ -12,13 +14,15 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class BooleanTypeConvert implements TypeConvert<Boolean> {
 
     @Override
-    public byte[] encode(Boolean integer) {
-        return ByteUtil.getBytes(integer);
+    public ByteBuf encode(Boolean b) {
+        ByteBuf byteBuf = Unpooled.copyBoolean(b);
+        return byteBuf;
     }
 
     @Override
-    public Boolean decode(byte[] bytes) {
-        return ByteUtil.getBoolean(bytes);
+    public Boolean decode(ByteBuf byteBuf) {
+        boolean aBoolean = byteBuf.getBoolean(0);
+        return aBoolean;
     }
 
 }

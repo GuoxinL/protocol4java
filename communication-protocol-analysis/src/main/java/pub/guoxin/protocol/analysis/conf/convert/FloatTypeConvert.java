@@ -1,7 +1,8 @@
 package pub.guoxin.protocol.analysis.conf.convert;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
-import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 /**
  * C Signed float to Java Float
@@ -12,12 +13,14 @@ import pub.guoxin.protocol.analysis.utils.ByteUtil;
 public class FloatTypeConvert implements TypeConvert<Float> {
 
     @Override
-    public byte[] encode(Float f) {
-        return ByteUtil.getBytes(f);
+    public ByteBuf encode(Float f) {
+        ByteBuf byteBuf = Unpooled.copyFloat(f);
+        return byteBuf;
     }
 
     @Override
-    public Float decode(byte[] bytes) {
-        return ByteUtil.getFloat(bytes);
+    public Float decode(ByteBuf byteBuf) {
+        float aFloat = byteBuf.getFloat(0);
+        return aFloat;
     }
 }
