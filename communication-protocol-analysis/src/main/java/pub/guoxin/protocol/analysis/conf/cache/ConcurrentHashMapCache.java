@@ -2,6 +2,7 @@ package pub.guoxin.protocol.analysis.conf.cache;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -62,5 +63,9 @@ public class ConcurrentHashMapCache<K, V> implements Cache<K, V> {
             return false;
         }
         return true;
+    }
+
+    public Set<K> keys(){
+        return concurrentHashMap.keySet();
     }
 }

@@ -1,4 +1,4 @@
-package pub.guoxin.protocol.analysis.conf.cache.util;
+package pub.guoxin.protocol.analysis.conf.cache;
 
 import pub.guoxin.protocol.analysis.conf.cache.ConcurrentHashMapCache;
 import pub.guoxin.protocol.analysis.conf.cache.TypeCache;

@@ -1,7 +1,5 @@
 package pub.guoxin.protocol.samples;
 
-import org.springframework.stereotype.Component;
-import pub.guoxin.protocol.analysis.conf.entity.ProtocolEntitySet;
 import pub.guoxin.protocol.analysis.conf.register.adapter.ProtocolEntityRegisterConfigureAdapter;
 import pub.guoxin.protocol.analysis.conf.register.ProtocolEntityRegister;
 

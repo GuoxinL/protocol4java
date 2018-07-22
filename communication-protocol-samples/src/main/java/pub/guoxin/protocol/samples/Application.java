@@ -1,5 +1,6 @@
 package pub.guoxin.protocol.samples;
 
+import pub.guoxin.protocol.analysis.conf.register.ProtocolEntityRegister;
 import pub.guoxin.protocol.analysis.conf.register.adapter.ProtocolEntityRegisterConfigureAdapter;
 import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
 
@@ -84,8 +85,8 @@ public class Application {
         System.out.println(Boolean[].class.getComponentType());
 
         System.out.println("ggggggggggggggggggggggggggggggggggggggggggggggggg");
-        ProtocolEntityRegisterConfigureAdapter registerConfigureAdapter = new ProtocolEntityRegisterConfigureAdapterImpl();
-        registerConfigureAdapter.register(null);
+        ProtocolEntityRegister register = new ProtocolEntityRegister();
+        register.register(UpgradeProtocol.class);
         UpgradeProtocol upgradeProtocol = new UpgradeProtocol();
         upgradeProtocol.setEee(new short[] {1,2,3,4,5});
         upgradeProtocol.setCcc(new int[]{5,4,3,2,1});
