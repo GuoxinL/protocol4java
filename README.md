@@ -1,48 +1,68 @@
-# Protocol
-简介: 类Json通用传输协议（Emulate the Json universal transport protocol）
+# Protocol for Java
+## 简介
+> 该协议主要用于对象与二进制流的序列化和反序列化，在物联网快速发展的时代，快速的迭代是发展的根本，但是在不断的迭代的过程中开发人员对产品的理解也在不断的升级，这就造成在协议的制定过程中虽然规则渐渐完善，但是硬件产品发出去后与服务端的接口将在也不能被修改，后端项目越往后走可维护性越差最终导致这个项目成为了一个硬骨头。
 
 ## 协议结构
-这个协议是由一个协议头和多个数据段组成的，数据段中的数据包含两种：一种是基本类型数据另一种是数组类型数据
 
-
-- 协议头 
-
-|Length|definition|remark|
-|----|-----|:-----|
-|2|_Command_|命令（描述此次通信代表做什么事情）|
-|2|_Version_|版本（描述这次命令的版本）|
-|2|_Total packed_|数据段总包数（描述这次命令的版本）|
-
-- 基本类型数据段 
+- Herder(协议头)
+> 协议头中包含命令和版本两个属性，`Command`表示此次通信代表做什么事情；命令索引全局唯一不能重复，而`Version`表示这个这次命令的版本号；版本号全局不唯一，在此次命令下唯一，通过命令和版本来决定某个协议。
 
 |Length|definition|remark|
 |----|-----|:-----|
-|2|_Code index_|字段索引（描述字段对应的索引）|
-|1|_Type index_|类型索引（描述类型对应的索引）|
-|2|_Element[`1`] Length_|该字段用于描述此数据段中Data的长度|
-|变长|_Element[`1`]_|数据（数据的长度是由`Data Length`决定的）| 
+|1|_Command_|命令（描述此次通信代表做什么事情）|
+|1|_Version_|版本（描述这次命令的版本）|
 
-- 数组类型数据段  
+ - PackedList(数据段集合)
+> 数据段集合中包含多个数据段，`Total packed`表示数据段的数量
 
 |Length|definition|remark|
 |----|-----|:-----|
-|2|_Code index_|字段索引（描述字段对应的索引）|
-|1|_Type index_|类型索引（描述类型对应的索引）|
-|2|_Data Length_|该字段用于描述此数据段中Data的长度|
+|1|_Total packed_|数据段总包数（描述数据段的数量）|
+ 
+ - Packed(数据段) 
+> 一个数据段表示一个字段，`Code index`字段索引；字段索引全局不唯一，在此次命令下唯一，`Type index`类型索引；类型索引全局唯一
+
+|Length|definition|remark|
+|----|-----|:-----|
+|1|_Code index_|字段索引（描述字段对应的索引）|
+|1|_Type index_|类型索引（描述字段的类型对应的索引）|
+
+- ElementList(元素集合)  
+> 元素集合中包含元素个数`Element size`此处将数据段的的数据的存储方式抽象成了数组，如果元素个数为`1`时表示只有一个元素，证明该字段不是一个数组，如果元素个数`>1`时证明该字段是一个数组
+
+|Length|definition|remark|
+|----|-----|:-----|
+|2|_Element size_|元素个数（描述字段对应的索引）|
+
+- Element(元素)
+> `Element`表示数组中的元素；`Element[`i`] Length`表示第`i`个元素的长度；`Element[`i`]`表示元素`n`的数据（元素的大小长度是由元素`n`的`_Element[`i`] Length`指定的）
+
+|Length|definition|remark|
+|----|-----|:-----|
 |2|_Element[`i`] Length_|元素`i`的长度（描述第`i`个元素的长度）| 
-|变长|_Element[`i`]_|元素`i`数据（元素的长度是由元素`i`的长度）| 
+|变长|_Element[`i`]_|元素`i`的数据（元素的大小长度是由元素`i`的`_Element[`i`] Length`指定的）| 
 |2|_Element[`n`] Length_|元素`n`的长度（描述这次命令的版本）| 
-|变长|_Element[`n`]_|元素`n`数据（元素的长度是由元素`i`的长度）| 
+|变长|_Element[`n`]_|元素`n`的数据（元素的大小长度是由元素`n`的`_Element[`i`] Length`指定的）| 
 
 ## 协议支持类型
+>因为最初的设计是与C语言程序交互所以兼容了C语言中大部分常用类型
 
-1. 基本类型数据:  
-基本类型数据包含八种基本类型`byte` `short` `int` `long` `float` `double` `boolean` `string`
-2. 数组类型数据:  
-基本类型数据包含八种基本类型`byte[]` `short[]` `int[]` `long[]` `float[]` `double[]` `boolean[]` `string[]`
+|C|Java|Java `TypeConvert` implements|
+|----|-----|:-----|
+|signed char|byte|SignedChar2byteTypeConvert| 
+|signed short|short|SignedShort2shortTypeConvert| 
+|signed int|int|SignedInt2integerTypeConvert| 
+|signed long long|long|SignedLongLong2longTypeConvert| 
+|float|float|FloatTypeConvert| 
+|double|double|DoubleTypeConvert| 
+|0/1|boolean|BooleanTypeConvert| 
+|char array|String|StringTypeConvert| 
+|Unsigned char|byte|SignedChar2byteTypeConvert| 
+|Unsigned short|short|SignedShort2shortTypeConvert| 
+|Unsigned int|int|SignedInt2integerTypeConvert| 
+|Unsigned long long|long|SignedLongLong2longTypeConvert| 
 
 ## 协议架构
 
-配置模块
-> Tip:
->> 该协议暂时还不支持
+## 后续开发计划
+[开发计划](/DEVELOPMENT_PLAN.md)
