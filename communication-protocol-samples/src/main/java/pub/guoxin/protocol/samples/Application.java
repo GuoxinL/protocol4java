@@ -92,7 +92,7 @@ public class Application {
         upgradeProtocol.setCcc(new int[]{5,4,3,2,1});
         upgradeProtocol.setBbb("bbbbbbbbbbbb");
         upgradeProtocol.setDdd(new String[] {"dsa","aaa","bbb"});
-        upgradeProtocol.setAaa("321312k321312");
+        upgradeProtocol.setAaa("aaaaaaaaa");
         DataProtocol dataProtocol1 = new DataProtocol(upgradeProtocol);
         ByteBuf      buffer        = Unpooled.buffer();
         dataProtocol1.serialization(buffer);

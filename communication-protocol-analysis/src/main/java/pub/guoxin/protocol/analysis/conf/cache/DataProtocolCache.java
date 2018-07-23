@@ -9,12 +9,12 @@ import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
  */
 public class DataProtocolCache {
 
-    private static ConcurrentHashMapCache<Integer, DataProtocol> instance = new ConcurrentHashMapCache<>();
+    private static ConcurrentHashMapCache<String, DataProtocol> instance = new ConcurrentHashMapCache<>();
 
     private DataProtocolCache() {
     }
 
-    public static ConcurrentHashMapCache<Integer, DataProtocol> getInstance() {
+    public static ConcurrentHashMapCache<String, DataProtocol> getInstance() {
         return instance;
     }
 

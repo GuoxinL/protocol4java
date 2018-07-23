@@ -29,11 +29,6 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
      */
     private int elementSize;
 
-    private DataProtocolPacketElementList(int initialCapacity) {
-        super(initialCapacity);
-        this.elementSize = initialCapacity;
-    }
-
     DataProtocolPacketElementList(ByteBuf byteBuf, Class<? extends TypeConvert> type, DataProtocolIndexCode code) {
         {
             this.elementSize = byteBuf.readUnsignedShort();
@@ -71,6 +66,7 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
         for (Object object : objects) {
             add(new DataProtocolPacketElement(object, typeConvert));
         }
+        this.elementSize = this.size();
     }
 
     @Override

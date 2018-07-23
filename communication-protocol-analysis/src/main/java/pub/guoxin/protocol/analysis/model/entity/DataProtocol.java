@@ -102,7 +102,7 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
 
     public void analysis(ByteBuf byteBuf) {
         this.header = new DataProtocolHeader(byteBuf);
-        DataProtocol dataProtocol = DataProtocolCache.getInstance().get(header.getCommand().getIndex());
+        DataProtocol dataProtocol = DataProtocolCache.getInstance().get(header.getProtocolKey());
         if (Objects.isNull(dataProtocol)) {
             throw new ProtocolNotFoundException("该协议未找到！");
         }

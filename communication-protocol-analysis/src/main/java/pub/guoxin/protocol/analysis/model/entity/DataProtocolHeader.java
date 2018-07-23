@@ -51,6 +51,9 @@ public class DataProtocolHeader implements Serializable, ProtocolSerialization {
         this.version = protocol.version();
     }
 
+    public String getProtocolKey(){
+        return this.getCommand().getIndex() + "-" + this.version;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

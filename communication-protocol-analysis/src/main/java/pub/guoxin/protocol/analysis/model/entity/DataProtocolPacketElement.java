@@ -3,6 +3,7 @@ package pub.guoxin.protocol.analysis.model.entity;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import pub.guoxin.protocol.analysis.conf.convert.TypeConvert;
 import pub.guoxin.protocol.analysis.model.constants.DataProtocolConstants;
@@ -17,6 +18,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Getter
+@ToString
 @NoArgsConstructor
 class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
 
@@ -42,7 +44,7 @@ class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
         this.typeClass = type;
         {
             // 解析长度
-            this.elementLength = byteBuf.readUnsignedByte();
+            this.elementLength = byteBuf.readUnsignedShort();
             log.debug("elementLength readerIndex:{}", byteBuf.readerIndex());
         }
         {
