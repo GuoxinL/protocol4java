@@ -3,13 +3,15 @@ package pub.guoxin.protocol.analysis.conf.convert;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import pub.guoxin.protocol.analysis.model.anno.Typed;
-import pub.guoxin.protocol.analysis.utils.ByteUtil;
 
 import java.math.BigInteger;
 
 /**
- * TODO this using {@link BigInteger} implementation
  * C Unsigned long long to Java {@link Long}
+ * <p>
+ * this using {@link BigInteger} implementation
+ * 9223372036854775807
+ * 922亿亿
  * <p>
  * Create by guoxin on 2018/7/9
  */
@@ -20,14 +22,14 @@ public class UnsignedLongLong2longTypeConvert implements TypeConvert<BigInteger>
 
     @Override
     public ByteBuf encode(BigInteger bigInteger) {
-        long l = bigInteger.longValue();
+        long    l       = bigInteger.longValue();
         ByteBuf byteBuf = Unpooled.copyLong(l);
         return byteBuf;
     }
 
     @Override
     public BigInteger decode(ByteBuf byteBuf) {
-        long       l = byteBuf.readLong();
+        long       l          = byteBuf.readLong();
         BigInteger bigInteger = BigInteger.valueOf(l);
         if (bigInteger.signum() < 0) {
             bigInteger = bigInteger.add(TWO_64);
