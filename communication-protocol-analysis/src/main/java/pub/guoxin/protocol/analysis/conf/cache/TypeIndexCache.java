@@ -38,8 +38,7 @@ public class TypeIndexCache {
         loadTypeConvert(UnsignedChar2byteTypeConvert.class);
         loadTypeConvert(UnsignedShort2shortTypeConvert.class);
         loadTypeConvert(UnsignedInt2integerTypeConvert.class);
-        // TODO 有时间回来写
-//        loadTypeConvert(UnsignedLongLong2longTypeConvert.class);
+        loadTypeConvert(UnsignedLongLong2longTypeConvert.class);
     }
 
     private static void loadTypeConvert(Class<? extends TypeConvert> clazz) {
