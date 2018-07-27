@@ -57,10 +57,10 @@
 |`double`|`double`|`DoubleTypeConvert`| 
 |`0/1`|`boolean`|`BooleanTypeConvert`| 
 |`char array`|`String`|`StringTypeConvert`| 
-|`unsigned char`|`byte`|`SignedChar2byteTypeConvert`| 
-|`unsigned short`|`short`|`SignedShort2shortTypeConvert`| 
-|`unsigned int`|`int`|`SignedInt2integerTypeConvert`| 
-|`unsigned long long`|`long`|`SignedLongLong2longTypeConvert`| 
+|`unsigned char`|`byte`|`UnsignedChar2byteTypeConvert`| 
+|`unsigned short`|`short`|`UnsignedShort2shortTypeConvert`| 
+|`unsigned int`|`int`|`UnsignedInt2integerTypeConvert`| 
+|`unsigned long long`|`long`|`UnsignedLongLong2longTypeConvert`| 
 
 ## 协议架构
 
