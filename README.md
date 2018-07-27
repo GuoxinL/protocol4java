@@ -75,5 +75,16 @@ st->op->cond
 cond(yes)->e
 cond(no)->op
 ```
+```flow
+st=>start: Start:>https://www.markdown-syntax.com
+io=>inputoutput: verification
+op=>operation: Your Operation
+cond=>condition: Yes or No?
+sub=>subroutine: Your Subroutine
+e=>end
+st->io->op->cond
+cond(yes)->e
+cond(no)->sub->io
+```
 ## 后续开发计划
 [开发计划](/DEVELOPMENT_PLAN.md)
