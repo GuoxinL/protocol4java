@@ -1,5 +1,7 @@
 package pub.guoxin.protocol.samples;
 
+import lombok.Getter;
+import lombok.Setter;
 import pub.guoxin.protocol.analysis.conf.convert.SignedInt2integerTypeConvert;
 import pub.guoxin.protocol.analysis.conf.convert.SignedShort2shortTypeConvert;
 import pub.guoxin.protocol.analysis.conf.convert.StringTypeConvert;
@@ -13,6 +15,8 @@ import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 /**
  * Create by guoxin on 2018/6/13
  */
+@Getter
+@Setter
 @Protocol(commandIndex = 1, version = 1)
 @Callback(callback = DataProtocolCallbackService.class)
 public class UpgradeProtocol implements ProtocolEntity {
