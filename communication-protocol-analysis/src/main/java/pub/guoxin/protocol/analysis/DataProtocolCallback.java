@@ -15,19 +15,18 @@ import java.util.Objects;
  */
 public class DataProtocolCallback implements Callback<ByteBuf, ByteBuf> {
 
-    @SuppressWarnings("unchecked")
     @Override
     public ByteBuf call(ByteBuf byteBuf) {
         DataProtocol dataProtocol = new DataProtocol(byteBuf);
         Class        callback     = dataProtocol.getCallback();
-        Object protocolEntity = ClassUtils.methodInvoke(callback, "call", DataProtocol.class, dataProtocol);
-        if (Objects.nonNull(protocolEntity)) {
-            ProtocolEntity protocolEntity1 = (ProtocolEntity) protocolEntity;
-            DataProtocol   result          = new DataProtocol(protocolEntity1);
-            ByteBuf        buffer          = Unpooled.buffer();
-            result.serialization(buffer);
-            return buffer;
+        Object resultProtocolEntity = ClassUtils.methodInvoke(callback, "call", DataProtocol.class, dataProtocol);
+        if (Objects.isNull(resultProtocolEntity)) {
+            return null;
         }
-        return null;
+        DataProtocol   result          = new DataProtocol((ProtocolEntity) resultProtocolEntity);
+        ByteBuf        buffer          = Unpooled.buffer();
+        result.serialization(buffer);
+        return buffer;
     }
+
 }

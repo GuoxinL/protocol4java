@@ -15,78 +15,17 @@ public class Application {
 
     public static void main(String[] args) throws IllegalAccessException {
 
-        System.out.println(byte.class);
-        System.out.println(short.class);
-        System.out.println(int.class);
-        System.out.println(long.class);
-        System.out.println(float.class);
-        System.out.println(double.class);
-        System.out.println(char.class);
-        System.out.println(boolean.class);
-        System.out.println("--------------------------------------------------");
-        System.out.println(byte[].class);
-        System.out.println(short[].class);
-        System.out.println(int[].class);
-        System.out.println(long[].class);
-        System.out.println(float[].class);
-        System.out.println(double[].class);
-        System.out.println(char[].class);
-        System.out.println(boolean[].class);
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println(Byte.class);
-        System.out.println(Short.class);
-        System.out.println(Integer.class);
-        System.out.println(Long.class);
-        System.out.println(Float.class);
-        System.out.println(Double.class);
-        System.out.println(Character.class);
-        System.out.println(Boolean.class);
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        System.out.println(Byte[].class);
-        System.out.println(Short[].class);
-        System.out.println(Integer[].class);
-        System.out.println(Long[].class);
-        System.out.println(Float[].class);
-        System.out.println(Double[].class);
-        System.out.println(Character[].class);
-        System.out.println(Boolean[].class);
 
-        System.out.println("--------------------------------------------------");
-
-        System.out.println(byte.class.getComponentType());
-        System.out.println(short.class.getComponentType());
-        System.out.println(int.class.getComponentType());
-        System.out.println(long.class.getComponentType());
-        System.out.println(float.class.getComponentType());
-        System.out.println(double.class.getComponentType());
-        System.out.println(char.class.getComponentType());
-        System.out.println(boolean.class.getComponentType());
-
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-        System.out.println(byte[].class.getComponentType());
-        System.out.println(short[].class.getComponentType());
-        System.out.println(int[].class.getComponentType());
-        System.out.println(long[].class.getComponentType());
-        System.out.println(float[].class.getComponentType());
-        System.out.println(double[].class.getComponentType());
-        System.out.println(char[].class.getComponentType());
-        System.out.println(boolean[].class.getComponentType());
-
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-        System.out.println(Byte[].class.getComponentType());
-        System.out.println(Short[].class.getComponentType());
-        System.out.println(Integer[].class.getComponentType());
-        System.out.println(Long[].class.getComponentType());
-        System.out.println(Float[].class.getComponentType());
-        System.out.println(Double[].class.getComponentType());
-        System.out.println(Character[].class.getComponentType());
-        System.out.println(Boolean[].class.getComponentType());
-
-        System.out.println("ggggggggggggggggggggggggggggggggggggggggggggggggg");
         ProtocolEntityRegister register = new ProtocolEntityRegister();
         register.register(UpgradeProtocol.class);
+
+
+
+
+
+
+
+
         UpgradeProtocol upgradeProtocol = new UpgradeProtocol();
         upgradeProtocol.setEee(new short[] {1,2,3,4,5});
         upgradeProtocol.setCcc(new int[]{5,4,3,2,1});
@@ -94,6 +33,7 @@ public class Application {
         upgradeProtocol.setDdd(new String[] {"dsa","aaa","bbb"});
         upgradeProtocol.setAaa("aaaaaaaaa");
         DataProtocol dataProtocol1 = new DataProtocol(upgradeProtocol);
+        System.out.println(dataProtocol1);
         ByteBuf      buffer        = Unpooled.buffer();
         dataProtocol1.serialization(buffer);
 

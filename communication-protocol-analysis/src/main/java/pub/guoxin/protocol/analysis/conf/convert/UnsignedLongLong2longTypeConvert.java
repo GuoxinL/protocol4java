@@ -10,7 +10,8 @@ import java.math.BigInteger;
  * C Unsigned long long to Java {@link Long}
  * <p>
  * this using {@link BigInteger} implementation
- * 9223372036854775807
+ * +9223372036854775807
+ * -9223372036854775807
  * 922亿亿
  * <p>
  * Create by guoxin on 2018/7/9
