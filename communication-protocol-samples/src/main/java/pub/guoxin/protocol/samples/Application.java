@@ -32,13 +32,13 @@ public class Application {
         upgradeProtocol.setBbb("bbbbbbbbbbbb");
         upgradeProtocol.setDdd(new String[] {"dsa","aaa","bbb"});
         upgradeProtocol.setAaa("aaaaaaaaa");
-        DataProtocol dataProtocol1 = new DataProtocol(upgradeProtocol);
+        DataProtocol dataProtocol1 = DataProtocol.convert(upgradeProtocol);
         System.out.println(dataProtocol1);
         ByteBuf      buffer        = Unpooled.buffer();
         dataProtocol1.serialization(buffer);
 
         System.out.println(Arrays.toString(ByteBufUtil.getBytes(buffer)));
-        DataProtocol dataProtocol2 = new DataProtocol(buffer);
+        DataProtocol dataProtocol2 = DataProtocol.analysis(buffer);
         System.out.println(dataProtocol2);
     }
 }

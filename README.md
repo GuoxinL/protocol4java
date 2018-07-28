@@ -65,8 +65,9 @@
 ## 协议架构
 ![协议架构图-V1][protocol-framework-v1]
 
-[protocol-framework-v1]:images/protocol-framework-v1.png "协议架构图-V1"
 ## 流程图
 
 ## 后续开发计划
-[开发计划](/DEVELOPMENT_PLAN.md)
+[开发计划](DEVELOPMENT_PLAN.md)
+
+[protocol-framework-v1]:images/protocol-framework-v1.png "协议架构图-V1"

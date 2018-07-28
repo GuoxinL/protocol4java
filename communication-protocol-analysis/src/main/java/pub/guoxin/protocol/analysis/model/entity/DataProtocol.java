@@ -51,13 +51,18 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
      *
      * @param bytes 字节流
      */
-    public DataProtocol(byte[] bytes) {
+    private DataProtocol(byte[] bytes) {
         ByteBuf byteBuf = Unpooled.copiedBuffer(bytes);
-        analysis(byteBuf);
+        analysis0(byteBuf);
     }
 
-    public DataProtocol(ByteBuf byteBuffer) {
-        analysis(byteBuffer);
+    /**
+     * 解析数据
+     *
+     * @param byteBuf 字节流
+     */
+    private DataProtocol(ByteBuf byteBuf) {
+        analysis0(byteBuf);
     }
 
     /**
@@ -65,7 +70,7 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
      *
      * @param protocolEntity 协议对象
      */
-    public DataProtocol(ProtocolEntity protocolEntity) {
+    private DataProtocol(ProtocolEntity protocolEntity) {
         this(protocolEntity.getClass(), protocolEntity);
     }
 
@@ -91,16 +96,42 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
     }
 
     /**
+     * 协议对象转换为协议适配对象
+     *
+     * @param protocolEntity 协议对象
+     */
+    public static DataProtocol convert(ProtocolEntity protocolEntity) {
+        return new DataProtocol(protocolEntity);
+    }
+
+    /**
      * 解析协议对象
      *
      * @param clazz
      * @return
      */
-    public static DataProtocol analysis(Class<? extends ProtocolEntity> clazz) {
+    public static DataProtocol convert(Class<? extends ProtocolEntity> clazz) {
         return new DataProtocol(clazz, null);
     }
 
-    public void analysis(ByteBuf byteBuf) {
+    /**
+     * 解析数据
+     *
+     * @param bytes 字节流
+     */
+    public static DataProtocol analysis(byte[] bytes) {
+        return new DataProtocol(bytes);
+    }
+    /**
+     * 解析数据
+     *
+     * @param byteBuf 字节流
+     */
+    public static DataProtocol analysis(ByteBuf byteBuf) {
+        return new DataProtocol(byteBuf);
+    }
+
+    private void analysis0(ByteBuf byteBuf) {
         this.header = new DataProtocolHeader(byteBuf);
         DataProtocol dataProtocol = DataProtocolCache.getInstance().get(header.getProtocolKey());
         if (Objects.isNull(dataProtocol)) {
@@ -121,7 +152,6 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
         }
         packets.protocolEntity(instance, this.protocolEntity.getDeclaredFields());
         return (ProtocolEntity) instance;
-
     }
 
     @Override

@@ -17,14 +17,14 @@ public class DataProtocolCallback implements Callback<ByteBuf, ByteBuf> {
 
     @Override
     public ByteBuf call(ByteBuf byteBuf) {
-        DataProtocol dataProtocol = new DataProtocol(byteBuf);
-        Class        callback     = dataProtocol.getCallback();
-        Object resultProtocolEntity = ClassUtils.methodInvoke(callback, "call", DataProtocol.class, dataProtocol);
+        DataProtocol dataProtocol         = DataProtocol.analysis(byteBuf);
+        Class        callback             = dataProtocol.getCallback();
+        Object       resultProtocolEntity = ClassUtils.methodInvoke(callback, "call", DataProtocol.class, dataProtocol);
         if (Objects.isNull(resultProtocolEntity)) {
             return null;
         }
-        DataProtocol   result          = new DataProtocol((ProtocolEntity) resultProtocolEntity);
-        ByteBuf        buffer          = Unpooled.buffer();
+        DataProtocol result = DataProtocol.convert((ProtocolEntity) resultProtocolEntity);
+        ByteBuf      buffer = Unpooled.buffer();
         result.serialization(buffer);
         return buffer;
     }

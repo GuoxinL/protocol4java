@@ -4,8 +4,6 @@ import lombok.Getter;
 import pub.guoxin.protocol.analysis.conf.cache.DataProtocolCache;
 import pub.guoxin.protocol.analysis.conf.entity.ProtocolSet;
 import pub.guoxin.protocol.analysis.model.entity.DataProtocol;
-import pub.guoxin.protocol.analysis.model.entity.DataProtocolHeader;
-import pub.guoxin.protocol.analysis.model.entity.DataProtocolIndexCommand;
 import pub.guoxin.protocol.analysis.model.entity.ProtocolEntity;
 import pub.guoxin.protocol.analysis.model.exception.ProtocolConfigException;
 
@@ -20,8 +18,8 @@ public class ProtocolEntityRegister implements ProtocolRegister<Class<? extends 
     private ProtocolSet<Class<? extends ProtocolEntity>> register = ProtocolSet.newDataProtocolMap();
 
     @Override
-    public ProtocolRegister register(Class<? extends ProtocolEntity> element) {
-        DataProtocol             analysis = DataProtocol.analysis(element);
+    public ProtocolRegister register(Class<? extends ProtocolEntity> protocolEntity) {
+        DataProtocol             analysis = DataProtocol.convert(protocolEntity);
 
         if (DataProtocolCache.getInstance().exists(analysis.getHeader().getProtocolKey())) {
             throw new ProtocolConfigException("Command index exists, " + analysis.getHeader().getProtocolKey());
