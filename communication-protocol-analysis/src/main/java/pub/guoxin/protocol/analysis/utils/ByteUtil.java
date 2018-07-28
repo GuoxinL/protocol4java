@@ -1,7 +1,6 @@
 package pub.guoxin.protocol.analysis.utils;
 
 import com.google.common.base.Strings;
-import pub.guoxin.protocol.analysis.model.TypeClass;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -14,53 +13,6 @@ import java.util.Arrays;
  */
 public class ByteUtil {
 
-    public static byte[] createEmptyByteArray(int begin, int end) {
-        return new byte[end - begin];
-    }
-
-    public static Object getObject(TypeClass typeClass, byte[] bytes) {
-        switch (typeClass) {
-            case Byte:
-                return bytes[0];
-            case Short:
-                return getShort(bytes);
-            case Integer:
-                return getInt(bytes);
-            case Long:
-                return getLong(bytes);
-            case Float:
-                return getLong(bytes);
-            case Double:
-                return getDouble(bytes);
-            case Boolean:
-                return getBoolean(bytes);
-            case String:
-                return getString(bytes);
-            default:
-                throw new IllegalArgumentException("不支持该类型");
-        }
-    }
-
-    public static byte[] getBytes(TypeClass typeClass, Object obj) {
-        switch (typeClass) {
-            case Short:
-                return getBytes((Short) obj);
-            case Integer:
-                return getBytes((Integer) obj);
-            case Long:
-                return getBytes((Long) obj);
-            case Float:
-                return getBytes((Float) obj);
-            case Double:
-                return getBytes((Double) obj);
-            case Boolean:
-                return getBytes((Boolean) obj);
-            case String:
-                return getBytes((String) obj);
-            default:
-                throw new IllegalArgumentException("不支持该类型");
-        }
-    }
 
     public static byte[] getBytes(boolean data) {
         return new byte[]{(data) ? (byte) 1 : (byte) 0};

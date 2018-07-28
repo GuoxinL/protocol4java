@@ -63,28 +63,10 @@
 |`unsigned long long`|`long`|`UnsignedLongLong2longTypeConvert`| 
 
 ## 协议架构
+![协议架构图-V1][protocol-framework-v1]
 
+[protocol-framework-v1]:images/protocol-framework-v1.png "协议架构图-V1"
 ## 流程图
-```flow
-st=>start: 用户登陆
-op=>operation: 登陆操作
-cond=>condition: 登陆成功 Yes or No?
-e=>end: 进入后台
 
-st->op->cond
-cond(yes)->e
-cond(no)->op
-```
-```flow
-st=>start: Start:>https://www.markdown-syntax.com
-io=>inputoutput: verification
-op=>operation: Your Operation
-cond=>condition: Yes or No?
-sub=>subroutine: Your Subroutine
-e=>end
-st->io->op->cond
-cond(yes)->e
-cond(no)->sub->io
-```
 ## 后续开发计划
 [开发计划](/DEVELOPMENT_PLAN.md)
