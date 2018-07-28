@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>protocol</artifactId>
-        <groupId>pub.guoxin.protocol</groupId>
+        <groupId>io.github.protocol</groupId>
+        <artifactId>protocol4java</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,12 +12,8 @@
     <artifactId>communication-protocol-samples</artifactId>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter</artifactId>-->
-        <!--</dependency>-->
         <dependency>
-            <groupId>pub.guoxin.protocol</groupId>
+            <groupId>io.github.protocol</groupId>
             <artifactId>communication-protocol-analysis</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
