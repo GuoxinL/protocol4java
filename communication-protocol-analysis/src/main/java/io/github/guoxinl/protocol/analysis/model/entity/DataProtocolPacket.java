@@ -71,17 +71,21 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
 
     DataProtocolPacket(Field declaredField, ProtocolEntity protocolEntity) {
         CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
-        TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
         if (Objects.isNull(codeIndexAnnotation)) {
             throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
         }
+        this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
+
+        TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
         if (Objects.isNull(typeIndexAnnotation)) {
             throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @TypeIndex 注解对协议对象进行标注");
         }
-        this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
 
         int                          typeIndex   = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
         TypeCache                    typeCache   = TypeIndexCache.getInstance().get(typeIndex);
+        if (Objects.isNull(typeCache)) {
+            throw new ProtocolConfigException("TypeIndex为 " + typeIndex + "TypeConvert未注册");
+        }
         Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
 
         this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
