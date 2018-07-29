@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
  */
 @Slf4j
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement> implements Serializable, ProtocolSerialization {
 
