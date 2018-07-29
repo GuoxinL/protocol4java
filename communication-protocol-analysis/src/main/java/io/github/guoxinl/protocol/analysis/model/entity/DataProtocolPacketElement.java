@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Getter
-@ToString
+@ToString(exclude = "typeClass")
 @NoArgsConstructor
 class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
 
@@ -71,7 +71,6 @@ class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
 
     @Override
     public void serialization(ByteBuf byteBuf) {
-        // byte[] encode(T t);
         Object  data        = ClassUtils.methodInvoke(this.typeClass, "encode", Object.class, this.data);
         ByteBuf dataByteBuf = (ByteBuf) data;
 

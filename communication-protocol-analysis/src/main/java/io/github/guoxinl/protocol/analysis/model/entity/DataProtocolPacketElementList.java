@@ -40,9 +40,9 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
         }
     }
 
-    DataProtocolPacketElementList(Field declaredField, ProtocolEntity protocolEntity, Class<? extends TypeConvert> typeConvert, boolean isArray) {
+    DataProtocolPacketElementList(Field declaredField, ProtocolEntity protocolEntity, Class<? extends TypeConvert> typeConvert) {
         Object[] objects;
-        if (isArray) {
+        if (declaredField.getType().isArray()) {
             Object obj;
             declaredField.setAccessible(true);
             try {

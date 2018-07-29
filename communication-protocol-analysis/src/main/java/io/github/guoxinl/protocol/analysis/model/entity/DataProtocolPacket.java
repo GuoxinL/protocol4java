@@ -1,5 +1,6 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
+import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -70,25 +71,25 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
         }
     }
 
-    DataProtocolPacket(Field declaredField, CodeIndex codeIndexAnnotation, TypeIndex typeIndexAnnotation, ProtocolEntity protocolEntity) {
+    DataProtocolPacket(Field declaredField, ProtocolEntity protocolEntity) {
+        CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
+        TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
+        if (Objects.isNull(codeIndexAnnotation)) {
+            throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
+        }
+        if (Objects.isNull(typeIndexAnnotation)) {
+            throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @TypeIndex 注解对协议对象进行标注");
+        }
         this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
-        boolean                      isArray     = declaredField.getType().isArray();
+
         int                          typeIndex   = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
         TypeCache                    typeCache   = TypeIndexCache.getInstance().get(typeIndex);
         Class<? extends TypeConvert> typeConvert = typeCache.getTypeConvert();
 
         this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
         if (Objects.nonNull(protocolEntity)) {
-            this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert, isArray);
+            this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert);
         }
-    }
-
-    public static void main(String[] args) {
-        int     unsignedShort = 65700;
-        ByteBuf byteBuf       = Unpooled.buffer();
-        byteBuf.writeShort(unsignedShort);
-        byte[] bytes = ByteBufUtil.getBytes(byteBuf);
-        System.out.println(Arrays.toString(bytes));
     }
 
     @Override
