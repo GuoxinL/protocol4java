@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * TODO 异常处理统一写
+ * 线程安全的缓存
  * <p>
  * Create by guoxin on 2018/7/10
  */

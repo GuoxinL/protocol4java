@@ -128,7 +128,7 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
                 declaredField.set(instance, /*packet.getData()*/null);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-                // TODO 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
+                // 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
                 throw new ProtocolException("如果这个对象正在执行Java语言访问控制 ，并且底层子弹不可访问会出现此错误", e);
             }
         }
