@@ -1,15 +1,13 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.netty.buffer.ByteBuf;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
-import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
-import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * 协议：数据段集合
@@ -18,6 +16,7 @@ import java.util.Objects;
  * Create by guoxin on 2018/7/8
  */
 @Slf4j
+@EqualsAndHashCode
 class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Serializable, ProtocolSerialization {
 
     private int totalPacket;
@@ -69,20 +68,6 @@ class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Se
                 dataProtocolPacket.serialization(byteBuf);
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        DataProtocolPacketList that = (DataProtocolPacketList) o;
-        return totalPacket == that.totalPacket;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), totalPacket);
     }
 
     public void protocolEntity(Object instance, Field[] declaredFields) {

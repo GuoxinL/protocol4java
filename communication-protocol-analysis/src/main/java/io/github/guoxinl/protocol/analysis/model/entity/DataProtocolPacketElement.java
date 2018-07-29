@@ -1,6 +1,7 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.netty.buffer.ByteBuf;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,7 +10,6 @@ import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
 import io.github.guoxinl.protocol.analysis.utils.ClassUtils;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * 协议：数据段 - 元素
@@ -18,6 +18,7 @@ import java.util.Objects;
 @Slf4j
 @Getter
 @ToString(exclude = "typeClass")
+@EqualsAndHashCode
 @NoArgsConstructor
 class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
 
@@ -54,19 +55,6 @@ class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
             Object data = ClassUtils.methodInvoke(this.typeClass, "decode", ByteBuf.class, elementByteBuf);
             this.data = data;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DataProtocolPacketElement that = (DataProtocolPacketElement) o;
-        return this.elementLength == that.elementLength;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(elementLength);
     }
 
     @Override

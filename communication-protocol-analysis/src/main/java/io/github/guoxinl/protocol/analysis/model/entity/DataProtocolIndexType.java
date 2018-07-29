@@ -1,5 +1,6 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * Create by guoxin on 2018/6/12
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class DataProtocolIndexType extends BaseDataProtocolIndex<String> implements Serializable {
 

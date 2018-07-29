@@ -2,8 +2,6 @@ package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.Unpooled;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import io.github.guoxinl.protocol.analysis.conf.cache.TypeCache;
@@ -16,7 +14,6 @@ import io.github.guoxinl.protocol.analysis.model.exception.TypeCacheNotFoundExce
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -28,6 +25,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 class DataProtocolPacket implements Serializable, ProtocolSerialization {
@@ -90,19 +88,6 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
         if (Objects.nonNull(protocolEntity)) {
             this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DataProtocolPacket that = (DataProtocolPacket) o;
-        return Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(elements, that.elements);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code, type, elements);
     }
 
     @Override

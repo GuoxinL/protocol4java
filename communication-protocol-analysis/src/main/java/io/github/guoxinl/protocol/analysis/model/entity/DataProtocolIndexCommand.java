@@ -1,5 +1,6 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * Create by guoxin on 2018/6/12
  */
 @ToString
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class DataProtocolIndexCommand extends BaseDataProtocolIndex<String> implements Serializable {
 

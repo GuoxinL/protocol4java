@@ -1,6 +1,7 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.netty.buffer.ByteBuf;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 /**
@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
  */
 @Slf4j
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement> implements Serializable, ProtocolSerialization {
 
@@ -66,20 +67,6 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
             add(new DataProtocolPacketElement(object, typeConvert));
         }
         this.elementSize = this.size();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        DataProtocolPacketElementList that = (DataProtocolPacketElementList) o;
-        return elementSize == that.elementSize;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), elementSize);
     }
 
     @Override

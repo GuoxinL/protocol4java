@@ -52,18 +52,6 @@ public class DataProtocolHeader implements Serializable, ProtocolSerialization {
     public String getProtocolKey(){
         return this.getCommand().getIndex() + "-" + this.version;
     }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DataProtocolHeader that = (DataProtocolHeader) o;
-        return version == that.version && Objects.equals(command, that.command);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(command, version);
-    }
 
     /**
      * 将协议对象序列化为字节流

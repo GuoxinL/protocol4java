@@ -24,6 +24,7 @@ import java.util.Objects;
 @Setter
 @Builder
 @ToString
+@EqualsAndHashCode(exclude = {"protocolEntity", "callback", "instance"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataProtocol implements Serializable, ProtocolSerialization {
@@ -152,19 +153,6 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
         }
         packets.protocolEntity(instance, this.protocolEntity.getDeclaredFields());
         return (ProtocolEntity) instance;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DataProtocol that = (DataProtocol) o;
-        return Objects.equals(this.header, that.header) && Objects.equals(this.packets, that.packets);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.header, this.packets);
     }
 
     /**
