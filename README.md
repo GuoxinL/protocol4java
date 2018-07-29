@@ -64,6 +64,7 @@
 
 ## 协议架构
 ![协议架构图-V1][protocol-framework-v1]
+![协议对象转换协议适配对象][data-protocol-to-data-protocol-v1]
 
 ## 流程图
 
@@ -71,3 +72,4 @@
 [开发计划](DEVELOPMENT_PLAN.md)
 
 [protocol-framework-v1]:images/protocol-framework-v1.png "协议架构图-V1"
+[data-protocol-to-data-protocol-v1]:images/data-protocol-to-data-protocol-v1.png "协议对象转换协议适配对象-V1"
