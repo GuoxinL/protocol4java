@@ -1,16 +1,17 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
+import io.github.guoxinl.protocol.analysis.conf.cache.TypeCache;
+import io.github.guoxinl.protocol.analysis.conf.cache.TypeIndexCache;
+import io.github.guoxinl.protocol.analysis.conf.convert.DefaultTypeClass;
+import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
+//import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
+import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
+import io.github.guoxinl.protocol.analysis.model.exception.ProtocolException;
+import io.github.guoxinl.protocol.analysis.model.exception.TypeCacheNotFoundException;
 import io.netty.buffer.ByteBuf;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import io.github.guoxinl.protocol.analysis.conf.cache.TypeCache;
-import io.github.guoxinl.protocol.analysis.conf.cache.TypeIndexCache;
-import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
-import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
-import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
-import io.github.guoxinl.protocol.analysis.model.exception.ProtocolException;
-import io.github.guoxinl.protocol.analysis.model.exception.TypeCacheNotFoundException;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -28,11 +29,8 @@ import java.util.Objects;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-class DataProtocolPacket implements Serializable, ProtocolSerialization {
-    /**
-     * 字段
-     */
-    private DataProtocolIndexCode         code;
+class DataProtocolPacket implements ProtocolSerialization {
+
     /**
      * 类型
      */
@@ -41,6 +39,14 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
      * 元素集合
      */
     private DataProtocolPacketElementList elements;
+    /**
+     * 利用hash排序
+     */
+    private int                           hash;
+    /**
+     * 字段索引
+     */
+    private short                         codeIndex;
 
     /**
      * 解析数据
@@ -49,12 +55,12 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
      */
     DataProtocolPacket(ByteBuf byteBuf) {
         {
-            int codeIndex = byteBuf.readUnsignedByte();
-            this.code = DataProtocolIndexCode.create(codeIndex);
+            this.codeIndex = byteBuf.readUnsignedByte();
+//            this.code = DataProtocolIndexCode.create(codeIndex);
             log.debug("codeIndex readerIndex:{}", byteBuf.readerIndex());
         }
         {
-            int       typeIndex = byteBuf.readUnsignedByte();
+            short typeIndex = byteBuf.readUnsignedByte();
             log.debug("typeIndex readerIndex:{}", byteBuf.readerIndex());
 
             TypeCache typeCache = TypeIndexCache.getInstance().get(typeIndex);
@@ -65,24 +71,38 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
             this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
         }
         {
-            this.elements = new DataProtocolPacketElementList(byteBuf, this.type.getType(), this.code);
+            this.elements = new DataProtocolPacketElementList(byteBuf, this.type.getType());
         }
     }
 
     DataProtocolPacket(Field declaredField, ProtocolEntity protocolEntity) {
-        CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
-        if (Objects.isNull(codeIndexAnnotation)) {
-            throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
-        }
-        this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
+//        CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
+//        if (Objects.isNull(codeIndexAnnotation)) {
+//            throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
+//        }
+        // TODO hashCode
+        this.hash = declaredField.getName().toLowerCase().hashCode();
+        // 使用hashCode排序后下标代替code
+        // this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
 
         TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
+        short     typeIndex;
         if (Objects.isNull(typeIndexAnnotation)) {
-            throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @TypeIndex 注解对协议对象进行标注");
+            Class<?> type;
+            if (declaredField.getType().isArray()) {
+                type = declaredField.getType().getComponentType();
+            } else {
+                type = declaredField.getType();
+            }
+
+            typeIndex = DefaultTypeClass.findTypeIndexByClass(type);
+            // 由于存在默认类型概念删除异常
+            // throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @TypeIndex 注解对协议对象进行标注");
+        } else {
+            typeIndex = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
         }
 
-        int                          typeIndex   = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
-        TypeCache                    typeCache   = TypeIndexCache.getInstance().get(typeIndex);
+        TypeCache typeCache = TypeIndexCache.getInstance().get(typeIndex);
         if (Objects.isNull(typeCache)) {
             throw new ProtocolConfigException("TypeIndex为 " + typeIndex + "TypeConvert未注册");
         }
@@ -97,7 +117,7 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
     @Override
     public void serialization(ByteBuf byteBuf) {
         {
-            byteBuf.writeByte(this.code.getIndex());
+            byteBuf.writeByte(this.codeIndex);
             log.debug("code writerIndex: {}", byteBuf.writerIndex());
         }
         {
@@ -110,8 +130,8 @@ class DataProtocolPacket implements Serializable, ProtocolSerialization {
         }
     }
 
-    void protocolEntity(Object instance, short codeIndex, Field declaredField) {
-        if (codeIndex == this.getCode().getIndex()) {
+    void protocolEntity(Object instance, int hash, Field declaredField) {
+        if (this.hash == hash) {
             declaredField.setAccessible(true);
             try {
                 declaredField.set(instance, /*packet.getData()*/null);

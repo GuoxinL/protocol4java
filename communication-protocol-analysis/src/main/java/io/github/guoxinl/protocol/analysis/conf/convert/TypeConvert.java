@@ -15,7 +15,7 @@ public interface TypeConvert<T> {
      */
     int BIT = 8;
 
-    static int getTypeIndex(Class<?> clazz) {
+    static short getTypeIndex(Class<?> clazz) {
         return clazz.getAnnotation(Typed.class).index();
     }
 

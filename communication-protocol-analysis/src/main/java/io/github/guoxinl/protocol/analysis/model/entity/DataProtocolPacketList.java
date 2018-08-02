@@ -2,12 +2,17 @@ package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.netty.buffer.ByteBuf;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
+//import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 协议：数据段集合
@@ -17,7 +22,8 @@ import java.util.ArrayList;
  */
 @Slf4j
 @EqualsAndHashCode
-class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Serializable, ProtocolSerialization {
+@NoArgsConstructor
+class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements ProtocolSerialization {
 
     private int totalPacket;
 
@@ -48,11 +54,13 @@ class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Se
      * @param protocolEntity
      */
     DataProtocolPacketList(Class<? extends ProtocolEntity> clazz, ProtocolEntity protocolEntity) {
-        // 拼凑数据段
-        for (Field declaredField : clazz.getDeclaredFields()) {
+        Field[] declaredFields = clazz.getDeclaredFields();
 
+        // 拼凑数据段
+        for (Field declaredField : declaredFields) {
             add(new DataProtocolPacket(declaredField, protocolEntity));
         }
+
         this.totalPacket = this.size();
     }
 
@@ -72,9 +80,10 @@ class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Se
 
     public void protocolEntity(Object instance, Field[] declaredFields) {
         for (Field declaredField : declaredFields) {
-            CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
+//            CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
+            int hash = declaredField.getName().toLowerCase().hashCode();
             for (DataProtocolPacket packet : this) {
-                packet.protocolEntity(instance, codeIndexAnnotation.index(), declaredField);
+                packet.protocolEntity(instance, hash, declaredField);
             }
         }
     }

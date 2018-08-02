@@ -22,21 +22,21 @@ import java.util.stream.IntStream;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement> implements Serializable, ProtocolSerialization {
+class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement> implements ProtocolSerialization {
 
     /**
      * 元素数量
      */
     private int elementSize;
 
-    DataProtocolPacketElementList(ByteBuf byteBuf, Class<? extends TypeConvert> type, DataProtocolIndexCode code) {
+    DataProtocolPacketElementList(ByteBuf byteBuf, Class<? extends TypeConvert> type) {
         {
             this.elementSize = byteBuf.readUnsignedShort();
             log.debug("elementSize readerIndex:{}", byteBuf.readerIndex());
         }
         {
             for (int i = 0; i < this.elementSize; i++) {
-                add(new DataProtocolPacketElement(byteBuf, type, code));
+                add(new DataProtocolPacketElement(byteBuf, type));
             }
         }
     }

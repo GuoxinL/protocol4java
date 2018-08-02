@@ -35,7 +35,7 @@ public @interface Typed {
     /**
      * 索引
      */
-    int index();
+    short index();
 
     /**
      * 字节数

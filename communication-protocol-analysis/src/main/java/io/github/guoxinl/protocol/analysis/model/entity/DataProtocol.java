@@ -12,7 +12,9 @@ import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigExcepti
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolNotFoundException;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 中间层: 协议适配对象
@@ -27,7 +29,7 @@ import java.util.Objects;
 @EqualsAndHashCode(exclude = {"protocolEntity", "callback", "instance"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataProtocol implements Serializable, ProtocolSerialization {
+public class DataProtocol implements ProtocolSerialization {
     /**
      * 协议头
      */
@@ -91,7 +93,11 @@ public class DataProtocol implements Serializable, ProtocolSerialization {
         }
         this.protocolEntity = clazz;
         this.callback = callbackAnnotation.callback();
-        this.packets = new DataProtocolPacketList(clazz, protocolEntity);
+
+        DataProtocolPacketList dataProtocolPackets = new DataProtocolPacketList(clazz, protocolEntity);
+        dataProtocolPackets = dataProtocolPackets.stream().sorted(Comparator.comparing(DataProtocolPacket::getCodeIndex)).collect(Collectors.toCollection(DataProtocolPacketList::new));
+        this.packets = dataProtocolPackets;
+
         this.header = new DataProtocolHeader(protocolAnnotation);
         this.instance = Objects.nonNull(protocolEntity);
     }

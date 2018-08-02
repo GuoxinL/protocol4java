@@ -16,7 +16,7 @@ public class ConcurrentHashMapCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) {
-        return concurrentHashMap.get(key);
+        return Objects.requireNonNull(concurrentHashMap.get(key));
     }
 
     @Override

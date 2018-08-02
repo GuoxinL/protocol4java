@@ -4,9 +4,13 @@ import java.lang.annotation.*;
 
 /**
  * 数据段字段 - 用于标记数据段字段
+ *
+ * deprecated:
+ * 用hash code进行排序代替手动标记codeIndex
  * <p>
  * Created by guoxin on 18-6-13.
  */
+@Deprecated
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

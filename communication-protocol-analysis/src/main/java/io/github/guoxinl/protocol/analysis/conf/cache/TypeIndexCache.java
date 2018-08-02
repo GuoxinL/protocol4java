@@ -1,7 +1,6 @@
 package io.github.guoxinl.protocol.analysis.conf.cache;
 
 import io.github.guoxinl.protocol.analysis.conf.convert.*;
-import io.github.protocol.analysis.conf.convert.*;
 
 /**
  * 类型索引缓存
@@ -10,7 +9,7 @@ import io.github.protocol.analysis.conf.convert.*;
  */
 public class TypeIndexCache {
 
-    private static ConcurrentHashMapCache<Integer, TypeCache> instance = new ConcurrentHashMapCache<>();
+    private static ConcurrentHashMapCache<Short, TypeCache> instance = new ConcurrentHashMapCache<>();
 
     static {
         init();
@@ -19,7 +18,7 @@ public class TypeIndexCache {
     private TypeIndexCache() {
     }
 
-    public static ConcurrentHashMapCache<Integer, TypeCache> getInstance() {
+    public static ConcurrentHashMapCache<Short, TypeCache> getInstance() {
         return instance;
     }
 
@@ -43,7 +42,7 @@ public class TypeIndexCache {
     }
 
     private static void loadTypeConvert(Class<? extends TypeConvert> clazz) {
-        int       typeIndex = TypeConvert.getTypeIndex(clazz);
+        short       typeIndex = TypeConvert.getTypeIndex(clazz);
         TypeCache typeCache = TypeConvert.getTypeCache(clazz, typeIndex);
         instance.put(typeIndex, typeCache);
     }

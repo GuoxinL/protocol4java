@@ -20,7 +20,7 @@ import java.io.Serializable;
 @ToString(exclude = "typeClass")
 @EqualsAndHashCode
 @NoArgsConstructor
-class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
+class DataProtocolPacketElement implements ProtocolSerialization {
 
     /**
      * 元素长度
@@ -40,7 +40,7 @@ class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
         this.typeClass = typeConvert;
     }
 
-    DataProtocolPacketElement(ByteBuf byteBuf, Class<? extends TypeConvert> type, DataProtocolIndexCode code) {
+    DataProtocolPacketElement(ByteBuf byteBuf, Class<? extends TypeConvert> type) {
         this.typeClass = type;
         {
             // 解析长度
@@ -52,8 +52,7 @@ class DataProtocolPacketElement implements Serializable, ProtocolSerialization {
             log.debug("elementData readerIndex:{}", byteBuf.readerIndex());
             // 解析数据
             // T decode(byte[] bytes);
-            Object data = ClassUtils.methodInvoke(this.typeClass, "decode", ByteBuf.class, elementByteBuf);
-            this.data = data;
+            this.data = ClassUtils.methodInvoke(this.typeClass, "decode", ByteBuf.class, elementByteBuf);
         }
     }
 

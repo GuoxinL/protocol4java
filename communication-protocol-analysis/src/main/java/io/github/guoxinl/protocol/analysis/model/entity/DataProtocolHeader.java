@@ -21,7 +21,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataProtocolHeader implements Serializable, ProtocolSerialization {
+public class DataProtocolHeader implements ProtocolSerialization {
 
     private DataProtocolIndexCommand command;
     private int                      version;
