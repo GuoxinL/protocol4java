@@ -71,7 +71,7 @@
 > 图1 中详细的描述了协议对象转换为协议适配对象的流程
 
 ![协议对象转换协议适配对象][data-protocol-to-data-protocol-v1]
-<p align="value">图1 协议对象转换协议适配对象</p>  
+<p align="center">图1 协议对象转换协议适配对象</p>  
 
 > PS:
 >> 上一行的兄dei你应该居中你造不，center标签、p标签都无效如果谁知道如何居中请一定要告诉我一下
@@ -80,4 +80,4 @@
 [开发计划](DEVELOPMENT_PLAN.md)
 
 [protocol-framework-v1]:images/protocol-framework-v1.png "协议架构图-V1"
-[data-protocol-to-data-protocol-v1]:images/data-protocol-to-data-protocol-v1.png "协议对象转换协议适配对象-V1"
+[data-protocol-to-data-protocol-v1]:images/data-protocol-to-data-protocol-v2.jpg "协议对象转换协议适配对象-V1"
