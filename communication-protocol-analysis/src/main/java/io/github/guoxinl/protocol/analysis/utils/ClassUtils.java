@@ -4,15 +4,13 @@ package io.github.guoxinl.protocol.analysis.utils;
 import io.github.guoxinl.protocol.analysis.conf.convert.SignedChar2byteTypeConvert;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolCallbackException;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 
 /**
  * Create by guoxin on 2018/7/9
  */
 public class ClassUtils {
+
     public static Class<?> getGenericsType(Class<?> clazz) {
         Type type = clazz.getGenericInterfaces()[0];
         // 通过这个方法获取了一个Type对象，里面实际上包含了类的各种基本信息，如成员变量、方法、类名和泛型的信息...
@@ -21,7 +19,34 @@ public class ClassUtils {
         return (Class<?>) args[0];
     }
 
-    public static Object methodInvoke(Class<?> clazz, String methodName, Class<?> parameterType, Object parameter){
+    public static boolean instanceOfClass(Type type) {
+        return type instanceof Class;
+    }
+
+    public static boolean instanceOfParameterizedType(Type type) {
+        return type instanceof ParameterizedType;
+    }
+
+    public static boolean instanceOfGenericArrayType(Type type) {
+        return type instanceof GenericArrayType;
+    }
+
+    public static boolean instanceOfTypeVariable(Type type) {
+        return type instanceof TypeVariable;
+    }
+
+    //    public static  Class<?> getGenericsTypes(Class<?> clazz){
+//
+//        // 如果是List类型，得到其Generic的类型
+//        // 如果是泛型参数的类型
+//        if(clazz instanceof ParameterizedType){
+//            ParameterizedType pt = (ParameterizedType) clazz;
+//            //得到泛型里的class类型对象
+//            Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
+//        }
+//
+//    }
+    public static Object methodInvoke(Class<?> clazz, String methodName, Class<?> parameterType, Object parameter) {
         Method call;
         try {
             call = clazz.getMethod(methodName, parameterType);

@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.protocol</groupId>
+            <groupId>io.github.guoxinl.protocol</groupId>
             <artifactId>communication-protocol-analysis</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>

@@ -1,6 +1,9 @@
 package io.github.guoxinl.protocol.analysis.conf.convert;
 
+import io.github.guoxinl.protocol.analysis.model.exception.ProtocolDefaultTypeClassNotFoundException;
 import lombok.AllArgsConstructor;
+
+import java.util.Objects;
 
 /**
  * 默认类型
@@ -46,11 +49,12 @@ public enum DefaultTypeClass {
      * @return 字段索引
      */
     public static short findTypeIndexByClass(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "Clazz not null");
         for (DefaultTypeClass defaultTypeClass : DefaultTypeClass.values()) {
             if (defaultTypeClass.referenceTypeClazz == clazz || defaultTypeClass.primitiveTypeClass == clazz) {
                 return defaultTypeClass.index;
             }
         }
-        throw new IllegalArgumentException("class: " + clazz.getName() + "not found!");
+        throw new ProtocolDefaultTypeClassNotFoundException("class: " + clazz.getName() + "not found!");
     }
 }

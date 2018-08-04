@@ -1,6 +1,7 @@
 package io.github.guoxinl.protocol.samples;
 
-import io.github.protocol.analysis.model.DataProtocolCallbackService;
+
+import io.github.guoxinl.protocol.analysis.model.DataProtocolCallbackService;
 
 /**
  * Create by guoxin on 2018/6/16

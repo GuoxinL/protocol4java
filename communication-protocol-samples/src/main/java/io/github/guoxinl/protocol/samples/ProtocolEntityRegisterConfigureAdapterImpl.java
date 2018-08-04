@@ -1,7 +1,7 @@
 package io.github.guoxinl.protocol.samples;
 
-import io.github.protocol.analysis.conf.register.adapter.ProtocolEntityRegisterConfigureAdapter;
-import io.github.protocol.analysis.conf.register.ProtocolEntityRegister;
+import io.github.guoxinl.protocol.analysis.conf.register.ProtocolEntityRegister;
+import io.github.guoxinl.protocol.analysis.conf.register.adapter.ProtocolEntityRegisterConfigureAdapter;
 
 /**
  * Created by guoxin on 18-3-10.

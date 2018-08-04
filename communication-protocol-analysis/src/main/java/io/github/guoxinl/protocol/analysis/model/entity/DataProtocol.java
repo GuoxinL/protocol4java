@@ -11,7 +11,6 @@ import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolNotFoundException;
 
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -96,6 +95,8 @@ public class DataProtocol implements ProtocolSerialization {
 
         DataProtocolPacketList dataProtocolPackets = new DataProtocolPacketList(clazz, protocolEntity);
         dataProtocolPackets = dataProtocolPackets.stream().sorted(Comparator.comparing(DataProtocolPacket::getCodeIndex)).collect(Collectors.toCollection(DataProtocolPacketList::new));
+        final DataProtocolPacketList finalDataProtocolPackets = dataProtocolPackets;
+        dataProtocolPackets.forEach(dataProtocolPacket -> dataProtocolPacket.setCodeIndex((short) finalDataProtocolPackets.indexOf(dataProtocolPacket)));
         this.packets = dataProtocolPackets;
 
         this.header = new DataProtocolHeader(protocolAnnotation);

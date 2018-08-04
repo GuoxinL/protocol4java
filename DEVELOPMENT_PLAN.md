@@ -1,7 +1,7 @@
 ## 开发计划
 > 优先级由上至下
 
-
+ - [ ] 支持`Collection`的子类，转换为`DataProtocolPacketElementList`
  - [ ] 在协议头中添加固定开头
  - [ ] 添加协议尾概念，用于存放压缩后数据和校验和
  - [ ] 校验和或者CRC校验
