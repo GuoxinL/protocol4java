@@ -1,14 +1,13 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
+import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
+import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 import io.netty.buffer.ByteBuf;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
-import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -79,6 +78,15 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
             for (DataProtocolPacketElement dataProtocolPacketElement : this) {
                 dataProtocolPacketElement.serialization(byteBuf);
             }
+        }
+    }
+
+    public Object protocolEntity() {
+        if (size() == 1) {
+            DataProtocolPacketElement dataProtocolPacketElement = this.get(0);
+            return dataProtocolPacketElement.getData();
+        } else {
+            return this.stream().map(DataProtocolPacketElement::getData).toArray();
         }
     }
 }

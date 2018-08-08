@@ -13,6 +13,13 @@ import java.lang.reflect.Type;
  * Create by guoxin on 2018/7/9
  */
 public class ClassUtils {
+
+    /**
+     * 获得类上的泛型类型
+     *
+     * @param clazz
+     * @return
+     */
     public static Class<?> getGenericsType(Class<?> clazz) {
         Type type = clazz.getGenericInterfaces()[0];
         // 通过这个方法获取了一个Type对象，里面实际上包含了类的各种基本信息，如成员变量、方法、类名和泛型的信息...
@@ -21,7 +28,7 @@ public class ClassUtils {
         return (Class<?>) args[0];
     }
 
-    public static Object methodInvoke(Class<?> clazz, String methodName, Class<?> parameterType, Object parameter){
+    public static Object methodInvoke(Class<?> clazz, String methodName, Class<?> parameterType, Object parameter) {
         Method call;
         try {
             call = clazz.getMethod(methodName, parameterType);

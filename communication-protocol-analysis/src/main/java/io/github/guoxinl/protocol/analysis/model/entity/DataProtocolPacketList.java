@@ -80,7 +80,6 @@ class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Pr
 
     public void protocolEntity(Object instance, Field[] declaredFields) {
         for (Field declaredField : declaredFields) {
-//            CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
             int hash = declaredField.getName().toLowerCase().hashCode();
             for (DataProtocolPacket packet : this) {
                 packet.protocolEntity(instance, hash, declaredField);

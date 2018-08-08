@@ -4,18 +4,17 @@ import io.github.guoxinl.protocol.analysis.conf.cache.TypeCache;
 import io.github.guoxinl.protocol.analysis.conf.cache.TypeIndexCache;
 import io.github.guoxinl.protocol.analysis.conf.convert.DefaultTypeClass;
 import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
-//import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
 import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
-import io.github.guoxinl.protocol.analysis.model.exception.ProtocolException;
 import io.github.guoxinl.protocol.analysis.model.exception.TypeCacheNotFoundException;
 import io.netty.buffer.ByteBuf;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Objects;
+
+//import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
 
 /**
  * 协议：数据段
@@ -133,13 +132,15 @@ class DataProtocolPacket implements ProtocolSerialization {
     void protocolEntity(Object instance, int hash, Field declaredField) {
         if (this.hash == hash) {
             declaredField.setAccessible(true);
+            Object o = this.elements.protocolEntity();
             try {
-                declaredField.set(instance, /*packet.getData()*/null);
+                declaredField.set(instance, o);
             } catch (IllegalAccessException e) {
+                System.out.println("declaredField.set(instance, o);");
                 e.printStackTrace();
-                // 如果这个对象正在执行Java语言访问控制，并且底层子弹不可访问会出现此错误
-                throw new ProtocolException("如果这个对象正在执行Java语言访问控制 ，并且底层子弹不可访问会出现此错误", e);
             }
+        } else {
+            log.info("hash不相等");
         }
     }
 }
