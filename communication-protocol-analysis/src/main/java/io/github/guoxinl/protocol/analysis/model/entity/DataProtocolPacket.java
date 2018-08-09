@@ -82,57 +82,57 @@ class DataProtocolPacket implements ProtocolSerialization {
         // 使用hashCode排序后下标代替code
         this.hash = declaredField.getName().toLowerCase().hashCode();
 
-        TypeIndex           typeIndexAnnotation       = declaredField.getAnnotation(TypeIndex.class);
-        boolean             typeIndexAnnotationExists = Objects.isNull(typeIndexAnnotation);
-        short               typeIndex;
-        ProtocolSupportType protocolSupportType;
+        TypeIndex typeIndexAnnotation       = declaredField.getAnnotation(TypeIndex.class);
+        boolean   typeIndexAnnotationExists = Objects.isNull(typeIndexAnnotation);
+        short     typeIndex;
         // 如果注解不存在，按照默认类型处理
-            Class<?> type;
-            Type     genericType = declaredField.getGenericType();
-            if (ClassUtils.instanceOfClass(genericType)) {
+        ProtocolSupportType protocolSupportType;
+        Class<?> type;
+        Type     genericType = declaredField.getGenericType();
+        if (ClassUtils.instanceOfClass(genericType)) {
 
-                Class clazz = (Class) genericType;
-                if (clazz.isArray()) {
-                    type = clazz.getComponentType();
-                    // 设置类型
-                    protocolSupportType = ProtocolSupportType.Array;
-                } else {
-                    type = clazz;
-                    // 设置类型
-                    protocolSupportType = ProtocolSupportType.PrimitiveClass;
-                }
-
-            } else if (ClassUtils.instanceOfParameterizedType(genericType)) {
-                // 表示一种参数化的类型，比如Collection, Map
-                // 目前只支持实现于Collection的集合类型，泛型参数不能为空
-                ParameterizedType parameterizedType   = (ParameterizedType) genericType;
-                Type[]            actualTypeArguments = parameterizedType.getActualTypeArguments();
-                // 不支持没有泛型参数或者多个泛型参数
-                if (actualTypeArguments.length != 1) {
-                    throw new ProtocolTypeNotSupportException("Protocol type not support!");
-                }
-                // 判断泛型中的类型是否是Class
-                if (ClassUtils.instanceOfClass(actualTypeArguments[0])) {
-                    Class actualTypeArguments0 = (Class) actualTypeArguments[0];
-                    // 判断是否是数组
-                    if (actualTypeArguments0.isArray()) {
-                        throw new ProtocolTypeNotSupportException("不支持泛型类型中使用数组类型");
-                    }
-                    // 不是数组则获取类型
-                    type = actualTypeArguments0;
-                    // 设置类型
-                    protocolSupportType = ProtocolSupportType.GenericTypeCollection;
-                } else {
-                    throw new ProtocolTypeNotSupportException("不支持泛型类型中使用非协议基本类型！");
-                }
-            } else if (ClassUtils.instanceOfGenericArrayType(genericType)) {
-                throw new ProtocolTypeNotSupportException("Protocol type not support!");
-            } else if (ClassUtils.instanceOfTypeVariable(genericType)) {
-                throw new ProtocolTypeNotSupportException("Protocol type not support!");
+            Class clazz = (Class) genericType;
+            if (clazz.isArray()) {
+                type = clazz.getComponentType();
+                // 设置类型
+                protocolSupportType = ProtocolSupportType.Array;
             } else {
+                type = clazz;
+                // 设置类型
+                protocolSupportType = ProtocolSupportType.PrimitiveClass;
+            }
+
+        } else if (ClassUtils.instanceOfParameterizedType(genericType)) {
+            // 表示一种参数化的类型，比如Collection, Map
+            // 目前只支持实现于Collection的集合类型，泛型参数不能为空
+            ParameterizedType parameterizedType   = (ParameterizedType) genericType;
+            Type[]            actualTypeArguments = parameterizedType.getActualTypeArguments();
+            // 不支持没有泛型参数或者多个泛型参数
+            if (actualTypeArguments.length != 1) {
                 throw new ProtocolTypeNotSupportException("Protocol type not support!");
             }
-            typeIndex = DefaultTypeClass.findTypeIndexByClass(type);
+            // 判断泛型中的类型是否是Class
+            if (ClassUtils.instanceOfClass(actualTypeArguments[0])) {
+                Class actualTypeArguments0 = (Class) actualTypeArguments[0];
+                // 判断是否是数组
+                if (actualTypeArguments0.isArray()) {
+                    throw new ProtocolTypeNotSupportException("不支持泛型类型中使用数组类型");
+                }
+                // 不是数组则获取类型
+                type = actualTypeArguments0;
+                // 设置类型
+                protocolSupportType = ProtocolSupportType.GenericTypeCollection;
+            } else {
+                throw new ProtocolTypeNotSupportException("不支持泛型类型中使用非协议基本类型！");
+            }
+        } else if (ClassUtils.instanceOfGenericArrayType(genericType)) {
+            throw new ProtocolTypeNotSupportException("Protocol type not support!");
+        } else if (ClassUtils.instanceOfTypeVariable(genericType)) {
+            throw new ProtocolTypeNotSupportException("Protocol type not support!");
+        } else {
+            throw new ProtocolTypeNotSupportException("Protocol type not support!");
+        }
+        typeIndex = DefaultTypeClass.findTypeIndexByClass(type);
 //        } else {
 //            typeIndex = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
 //            protocolSupportType = ProtocolSupportType.Array;
@@ -146,7 +146,7 @@ class DataProtocolPacket implements ProtocolSerialization {
 
         this.type = DataProtocolIndexType.create(typeIndex, typeConvert);
         if (Objects.nonNull(protocolEntity)) {
-            this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert, protocolSupportType);
+            this.elements = new DataProtocolPacketElementList(declaredField, protocolEntity, typeConvert/*, protocolSupportType*/);
         }
     }
 
