@@ -4,7 +4,9 @@ import io.github.guoxinl.protocol.analysis.conf.convert.BooleanTypeConvert;
 import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
 import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
 import io.github.guoxinl.protocol.analysis.model.entity.ProtocolEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -14,10 +16,29 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Protocol(commandIndex = 255, version = 1)
 public class ResultProtocol implements ProtocolEntity {
 
     @TypeIndex(convert = BooleanTypeConvert.class)
     private Boolean code;
 
+    /**
+     * 响应成功
+     *
+     * @return ProtocolEntity 获得一个成功响应对象
+     */
+    public static ResultProtocol success() {
+        return new ResultProtocol(true);
+    }
+
+    /**
+     * 响应失败
+     *
+     * @return ProtocolEntity 获得一个失败响应对象
+     */
+    public static ResultProtocol failure() {
+        return new ResultProtocol(false);
+    }
 }
