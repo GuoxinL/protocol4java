@@ -1,18 +1,16 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.netty.buffer.ByteBuf;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-//import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
+
+//import io.github.guoxinl.protocol.analysis.model.anno.CodeIndex;
 
 /**
  * 协议：数据段集合
@@ -21,29 +19,28 @@ import java.util.stream.Stream;
  * Create by guoxin on 2018/7/8
  */
 @Slf4j
-@EqualsAndHashCode
+@ToString
+@Getter
+@Setter
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements ProtocolSerialization {
 
     private int totalPacket;
-
-    private DataProtocolPacketList(int initialCapacity) {
-        super(initialCapacity);
-        this.totalPacket = initialCapacity;
-    }
 
     /**
      * 解析数据
      *
      * @param byteBuf 字节流
+     * @param packets
      */
-    DataProtocolPacketList(ByteBuf byteBuf) {
+    DataProtocolPacketList(ByteBuf byteBuf, DataProtocolPacketList packets) {
         {
             this.totalPacket = byteBuf.readUnsignedShort();
             log.debug("totalPacket readerIndex: {}", byteBuf.readerIndex());
         }
         for (short i = 0; i < totalPacket; i++) {
-            add(new DataProtocolPacket(byteBuf));
+            add(new DataProtocolPacket(byteBuf, packets));
         }
     }
 
@@ -60,8 +57,8 @@ class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Pr
         for (Field declaredField : declaredFields) {
             add(new DataProtocolPacket(declaredField, protocolEntity));
         }
-
         this.totalPacket = this.size();
+        sort();
     }
 
     @Override
@@ -82,8 +79,15 @@ class DataProtocolPacketList extends ArrayList<DataProtocolPacket> implements Pr
         for (Field declaredField : declaredFields) {
             int hash = declaredField.getName().toLowerCase().hashCode();
             for (DataProtocolPacket packet : this) {
-                packet.protocolEntity(instance, hash, declaredField);
+                boolean b = packet.protocolEntity(instance, hash, declaredField);
+                if (b)
+                    break;
             }
         }
+    }
+
+    public void sort(){
+        this.sort(Comparator.comparing(DataProtocolPacket::getHash));
+        IntStream.range(0, this.size()).forEach(i -> this.get(i).setCodeIndex((short) i));
     }
 }

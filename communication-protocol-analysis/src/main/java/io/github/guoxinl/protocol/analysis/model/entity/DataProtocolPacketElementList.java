@@ -81,12 +81,17 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
         }
     }
 
-    public Object protocolEntity() {
+    public Object protocolEntity(Class<?> type) {
         if (size() == 1) {
             DataProtocolPacketElement dataProtocolPacketElement = this.get(0);
             return dataProtocolPacketElement.getData();
         } else {
-            return this.stream().map(DataProtocolPacketElement::getData).toArray();
+            type = type.isArray() ? type.getComponentType() : type;
+            Object   array  = Array.newInstance(type, this.size());
+            for (int i = 0; i < this.size(); i++) {
+                Array.set(array, i, this.get(i).getData());
+            }
+            return array;
         }
     }
 }

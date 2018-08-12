@@ -1,6 +1,6 @@
 package io.github.guoxinl.protocol.analysis.model;
 
-import javafx.util.Callback;
+import io.github.guoxinl.protocol.analysis.Callback;
 import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
 import io.github.guoxinl.protocol.analysis.model.entity.ProtocolEntity;
 

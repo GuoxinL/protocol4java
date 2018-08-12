@@ -29,15 +29,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 class DataProtocolPacket implements ProtocolSerialization {
-
-    /**
-     * 类型
-     */
-    private DataProtocolIndexType         type;
-    /**
-     * 元素集合
-     */
-    private DataProtocolPacketElementList elements;
     /**
      * 利用hash排序
      */
@@ -46,16 +37,25 @@ class DataProtocolPacket implements ProtocolSerialization {
      * 字段索引
      */
     private short                         codeIndex;
+    /**
+     * 类型
+     */
+    private DataProtocolIndexType         type;
+    /**
+     * 元素集合
+     */
+    private DataProtocolPacketElementList elements;
+
 
     /**
      * 解析数据
-     *
-     * @param byteBuf 字节流
+     *  @param byteBuf            字节流
+     * @param dataProtocolPacket 缓存中的数据段
      */
-    DataProtocolPacket(ByteBuf byteBuf) {
+    DataProtocolPacket(ByteBuf byteBuf, DataProtocolPacketList dataProtocolPacket) {
         {
             this.codeIndex = byteBuf.readUnsignedByte();
-//            this.code = DataProtocolIndexCode.create(codeIndex);
+            hash = dataProtocolPacket.stream().filter(protocolPacket -> this.codeIndex == protocolPacket.codeIndex).findFirst().map(protocolPacket -> protocolPacket.hash).orElse(this.hash);
             log.debug("codeIndex readerIndex:{}", byteBuf.readerIndex());
         }
         {
@@ -129,18 +129,22 @@ class DataProtocolPacket implements ProtocolSerialization {
         }
     }
 
-    void protocolEntity(Object instance, int hash, Field declaredField) {
+    boolean protocolEntity(Object instance, int hash, Field declaredField) {
         if (this.hash == hash) {
             declaredField.setAccessible(true);
-            Object o = this.elements.protocolEntity();
+
+            Object o = this.elements.protocolEntity(declaredField.getType());
+
             try {
                 declaredField.set(instance, o);
             } catch (IllegalAccessException e) {
                 System.out.println("declaredField.set(instance, o);");
                 e.printStackTrace();
             }
+            return true;
         } else {
             log.info("hash不相等");
+            return false;
         }
     }
 }

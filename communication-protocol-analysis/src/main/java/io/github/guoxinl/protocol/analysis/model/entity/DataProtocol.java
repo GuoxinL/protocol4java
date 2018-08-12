@@ -1,20 +1,17 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.github.guoxinl.protocol.analysis.conf.cache.DataProtocolCache;
-import io.github.guoxinl.protocol.analysis.model.exception.ProtocolException;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import lombok.*;
 import io.github.guoxinl.protocol.analysis.model.DataProtocolCallbackService;
 import io.github.guoxinl.protocol.analysis.model.anno.Callback;
 import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
+import io.github.guoxinl.protocol.analysis.model.exception.ProtocolException;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolNotFoundException;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import lombok.*;
 
-import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 中间层: 协议适配对象
@@ -92,10 +89,11 @@ public class DataProtocol implements ProtocolSerialization {
             throw new ProtocolConfigException("请使用`@Protocol`对您的协议对象进行标识。");
         }
         this.protocolEntity = clazz;
-        this.callback = callbackAnnotation.callback();
+        if (Objects.nonNull(callbackAnnotation)) {
+            this.callback = callbackAnnotation.callback();
+        }
 
         DataProtocolPacketList dataProtocolPackets = new DataProtocolPacketList(clazz, protocolEntity);
-        dataProtocolPackets = dataProtocolPackets.stream().sorted(Comparator.comparing(DataProtocolPacket::getCodeIndex)).collect(Collectors.toCollection(DataProtocolPacketList::new));
         this.packets = dataProtocolPackets;
 
         this.header = new DataProtocolHeader(protocolAnnotation);
@@ -129,6 +127,7 @@ public class DataProtocol implements ProtocolSerialization {
     public static DataProtocol analysis(byte[] bytes) {
         return new DataProtocol(bytes);
     }
+
     /**
      * 解析数据
      *
@@ -146,7 +145,7 @@ public class DataProtocol implements ProtocolSerialization {
         }
         this.protocolEntity = dataProtocol.getProtocolEntity();
         this.callback = dataProtocol.getCallback();
-        this.packets = new DataProtocolPacketList(byteBuf);
+        this.packets = new DataProtocolPacketList(byteBuf, dataProtocol.getPackets());
     }
 
     public ProtocolEntity protocolEntity() {

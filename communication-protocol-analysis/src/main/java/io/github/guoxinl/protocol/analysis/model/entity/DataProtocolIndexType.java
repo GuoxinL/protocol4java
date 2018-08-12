@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class DataProtocolIndexType extends BaseDataProtocolIndex<String> implements Serializable {
+public class DataProtocolIndexType extends BaseDataProtocolIndex<String> {
 
     private Class<? extends TypeConvert> type;
 
