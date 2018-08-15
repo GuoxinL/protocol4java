@@ -72,7 +72,7 @@ public class Protocol4javaSamplesApplication {
 
     }
 
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) {
 
         // 注册协议对象
         ProtocolEntityRegister register = new ProtocolEntityRegister();
