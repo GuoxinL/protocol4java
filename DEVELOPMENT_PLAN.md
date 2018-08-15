@@ -1,6 +1,11 @@
 ## 开发计划
 > 优先级由上至下
 
+ - [ ] 重写`DataProtocolPacketList`类
+ > Tips:
+ >> `DataProtocolPacketList`这个类的主要功能是装载协议的字段，这个类的主要特性有：元素有序；元素根据hash后hash code不重复；自动排序，本想使用`TreeSet`但是`TreeSet`内部`TreeMap`中`value`默认填入使用了`Object().hashCode(`)这样直接导致了hash不稳定，不利于多端开发
+ 
+ - [ ] 上传中央仓库
  - [ ] 因为在Coding的过程中发现每一层之间对于类型需求的耦合度，需求最大的ElementList，将Packet中的类型改存放在ElementList中
  - [ ] 优化类型解析
  - [ ] 在协议头中添加固定开头
@@ -13,7 +18,6 @@
 ## 以完成任务
 ### 2018年08月13日01:38:15
  - 优化了协议适配对象中ElementList转换为协议对象中的类型所触发的问题
-
 ### 2018年08月10日00:51:34
  - 协议流程图
  
