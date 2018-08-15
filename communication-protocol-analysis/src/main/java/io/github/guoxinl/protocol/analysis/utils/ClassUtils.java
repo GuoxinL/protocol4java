@@ -3,17 +3,44 @@ package io.github.guoxinl.protocol.analysis.utils;
 
 import io.github.guoxinl.protocol.analysis.conf.convert.SignedChar2byteTypeConvert;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolCallbackException;
+import io.github.guoxinl.protocol.analysis.model.exception.ProtocolException;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
+import java.util.Objects;
 
 /**
  * Create by guoxin on 2018/7/9
  */
 public class ClassUtils {
 
+    public static Object getField(Object instance, Field field) {
+        field.setAccessible(true);
+        try {
+            return field.get(instance);
+        } catch (IllegalAccessException e) {
+            throw new ProtocolException("如果这个对象正在执行Java语言访问控制 ，并且底层子弹不可访问会出现此错误", e);
+        }
+    }
+
+    public static void setField(Object instance, Field field, Object fieldValue) {
+        field.setAccessible(true);
+        try {
+            field.set(instance, fieldValue);
+        } catch (IllegalAccessException e) {
+            throw new ProtocolException("如果这个对象正在执行Java语言访问控制 ，并且底层子弹不可访问会出现此错误", e);
+        }
+    }
+
+    public static boolean isStatic(Field field){
+        Objects.requireNonNull(field, "\"field\" Is not null");
+        String s = Modifier.toString(field.getModifiers());
+        for (String modifier : s.split(" ")) {
+            if (modifier.equals("static")) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * 获得类上的泛型类型
      *
