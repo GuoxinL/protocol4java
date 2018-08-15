@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class ClassUtils {
 
-    public static Object getField(Object instance, Field field) {
+    public static Object getFieldValue(Object instance, Field field) {
         field.setAccessible(true);
         try {
             return field.get(instance);
@@ -22,7 +22,7 @@ public class ClassUtils {
         }
     }
 
-    public static void setField(Object instance, Field field, Object fieldValue) {
+    public static void setFieldValue(Object instance, Field field, Object fieldValue) {
         field.setAccessible(true);
         try {
             field.set(instance, fieldValue);

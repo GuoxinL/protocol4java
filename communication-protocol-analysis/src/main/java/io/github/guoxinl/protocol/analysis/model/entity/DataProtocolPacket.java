@@ -7,6 +7,7 @@ import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
 import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 import io.github.guoxinl.protocol.analysis.model.exception.TypeCacheNotFoundException;
+import io.github.guoxinl.protocol.analysis.utils.ClassUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,8 @@ class DataProtocolPacket implements ProtocolSerialization {
 
     /**
      * 解析数据
-     *  @param byteBuf            字节流
+     *
+     * @param byteBuf            字节流
      * @param dataProtocolPacket 缓存中的数据段
      */
     DataProtocolPacket(ByteBuf byteBuf, DataProtocolPacketList dataProtocolPacket) {
@@ -75,14 +77,7 @@ class DataProtocolPacket implements ProtocolSerialization {
     }
 
     DataProtocolPacket(Field declaredField, ProtocolEntity protocolEntity) {
-//        CodeIndex codeIndexAnnotation = declaredField.getAnnotation(CodeIndex.class);
-//        if (Objects.isNull(codeIndexAnnotation)) {
-//            throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @CodeIndex 注解对协议对象进行标注");
-//        }
-        // TODO hashCode
         this.hash = declaredField.getName().toLowerCase().hashCode();
-        // 使用hashCode排序后下标代替code
-        // this.code = DataProtocolIndexCode.create(codeIndexAnnotation.index(), codeIndexAnnotation.description());
 
         TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
         short     typeIndex;
@@ -130,21 +125,12 @@ class DataProtocolPacket implements ProtocolSerialization {
     }
 
     boolean protocolEntity(Object instance, int hash, Field declaredField) {
-        if (this.hash == hash) {
-            declaredField.setAccessible(true);
-
-            Object o = this.elements.protocolEntity(declaredField.getType());
-
-            try {
-                declaredField.set(instance, o);
-            } catch (IllegalAccessException e) {
-                System.out.println("declaredField.set(instance, o);");
-                e.printStackTrace();
-            }
-            return true;
-        } else {
-            log.info("hash不相等");
+        if (this.hash != hash) {
+            log.info("this.hash: {} not equal hash: {}", this.hash, hash);
             return false;
         }
+        Object o = this.elements.protocolEntity(declaredField.getType());
+        ClassUtils.setFieldValue(instance, declaredField, o);
+        return true;
     }
 }

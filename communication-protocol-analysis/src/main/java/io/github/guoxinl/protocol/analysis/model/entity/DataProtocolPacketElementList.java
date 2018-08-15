@@ -1,7 +1,7 @@
 package io.github.guoxinl.protocol.analysis.model.entity;
 
 import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
-import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
+import io.github.guoxinl.protocol.analysis.utils.ClassUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,24 +43,12 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
     DataProtocolPacketElementList(Field declaredField, ProtocolEntity protocolEntity, Class<? extends TypeConvert> typeConvert) {
         Object[] objects;
         if (declaredField.getType().isArray()) {
-            Object obj;
-            declaredField.setAccessible(true);
-            try {
-                obj = declaredField.get(protocolEntity);
-            } catch (IllegalAccessException e) {
-                throw new ProtocolConfigException("数组", e);
-            }
+            Object field = ClassUtils.getFieldValue(protocolEntity, declaredField);
             //iterable = Arrays.asList((Object[])object);
             //以上方式无法对基本数据类型数组进行转换，
-            objects = IntStream.range(0, Array.getLength(obj)).mapToObj(i -> Array.get(obj, i)).toArray();
+            objects = IntStream.range(0, Array.getLength(field)).mapToObj(i -> Array.get(field, i)).toArray();
         } else {
-            objects = new Object[1];
-            try {
-                declaredField.setAccessible(true);
-                objects[0] = declaredField.get(protocolEntity);
-            } catch (IllegalAccessException e) {
-                throw new ProtocolConfigException("非数组", e);
-            }
+            objects = new Object[]{ClassUtils.getFieldValue(protocolEntity, declaredField)};
         }
         for (Object object : objects) {
             add(new DataProtocolPacketElement(object, typeConvert));
@@ -87,7 +75,7 @@ class DataProtocolPacketElementList extends ArrayList<DataProtocolPacketElement>
             return dataProtocolPacketElement.getData();
         } else {
             type = type.isArray() ? type.getComponentType() : type;
-            Object   array  = Array.newInstance(type, this.size());
+            Object array = Array.newInstance(type, this.size());
             for (int i = 0; i < this.size(); i++) {
                 Array.set(array, i, this.get(i).getData());
             }
