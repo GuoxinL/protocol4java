@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  */
 public class Test {
     public static void main(String[] args) {
-        Field[] declaredFields = UpgradeProtocol.class.getDeclaredFields();
+        Field[] declaredFields = Protocol4javaExampleApplication.UpgradeProtocol.class.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             Class<?> type = declaredField.getType();
             if (type.isArray()){
