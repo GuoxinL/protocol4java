@@ -2,7 +2,7 @@ package io.github.guoxinl.protocol.analysis.model.common;
 
 import io.github.guoxinl.protocol.analysis.conf.convert.BooleanTypeConvert;
 import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
-import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
+import io.github.guoxinl.protocol.analysis.model.anno.Type;
 import io.github.guoxinl.protocol.analysis.model.entity.ProtocolEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Protocol(commandIndex = 255, version = 1)
 public class ResultProtocol implements ProtocolEntity {
 
-    @TypeIndex(convert = BooleanTypeConvert.class)
+    @Type(convert = BooleanTypeConvert.class)
     private Boolean code;
 
     /**

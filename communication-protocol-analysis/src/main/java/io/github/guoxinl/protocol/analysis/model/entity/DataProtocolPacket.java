@@ -4,7 +4,7 @@ import io.github.guoxinl.protocol.analysis.conf.cache.TypeCache;
 import io.github.guoxinl.protocol.analysis.conf.cache.TypeIndexCache;
 import io.github.guoxinl.protocol.analysis.conf.convert.DefaultTypeClass;
 import io.github.guoxinl.protocol.analysis.conf.convert.TypeConvert;
-import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
+import io.github.guoxinl.protocol.analysis.model.anno.Type;
 import io.github.guoxinl.protocol.analysis.model.exception.ProtocolConfigException;
 import io.github.guoxinl.protocol.analysis.model.exception.TypeCacheNotFoundException;
 import io.github.guoxinl.protocol.analysis.utils.ClassUtils;
@@ -79,9 +79,9 @@ class DataProtocolPacket implements ProtocolSerialization {
     DataProtocolPacket(Field declaredField, ProtocolEntity protocolEntity) {
         this.hash = declaredField.getName().toLowerCase().hashCode();
 
-        TypeIndex typeIndexAnnotation = declaredField.getAnnotation(TypeIndex.class);
-        short     typeIndex;
-        if (Objects.isNull(typeIndexAnnotation)) {
+        Type  typeAnnotation = declaredField.getAnnotation(Type.class);
+        short typeIndex;
+        if (Objects.isNull(typeAnnotation)) {
             Class<?> type;
             if (declaredField.getType().isArray()) {
                 type = declaredField.getType().getComponentType();
@@ -91,9 +91,9 @@ class DataProtocolPacket implements ProtocolSerialization {
 
             typeIndex = DefaultTypeClass.findTypeIndexByClass(type);
             // 由于存在默认类型概念删除异常
-            // throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @TypeIndex 注解对协议对象进行标注");
+            // throw new ProtocolConfigException("字段" + declaredField.getName() + "请使用 @Type 注解对协议对象进行标注");
         } else {
-            typeIndex = TypeConvert.getTypeIndex(typeIndexAnnotation.convert());
+            typeIndex = TypeConvert.getTypeIndex(typeAnnotation.convert());
         }
 
         TypeCache typeCache = TypeIndexCache.getInstance().get(typeIndex);

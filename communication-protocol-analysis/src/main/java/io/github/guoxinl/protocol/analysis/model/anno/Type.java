@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TypeIndex {
+public @interface Type {
     Class<? extends TypeConvert> convert() default TypeConvert.class;
 }

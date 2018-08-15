@@ -8,7 +8,7 @@ import io.github.guoxinl.protocol.analysis.conf.register.ProtocolEntityRegister;
 import io.github.guoxinl.protocol.analysis.model.DataProtocolCallbackService;
 import io.github.guoxinl.protocol.analysis.model.anno.Callback;
 import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
-import io.github.guoxinl.protocol.analysis.model.anno.TypeIndex;
+import io.github.guoxinl.protocol.analysis.model.anno.Type;
 import io.github.guoxinl.protocol.analysis.model.common.ResultProtocol;
 import io.github.guoxinl.protocol.analysis.model.entity.DataProtocol;
 import io.github.guoxinl.protocol.analysis.model.entity.ProtocolEntity;
@@ -36,19 +36,19 @@ public class Protocol4javaExampleApplication {
     @Callback(callback = ResultDataProtocolCallbackService.class)
     public static class UpgradeProtocol implements ProtocolEntity {
 
-        @TypeIndex(convert = StringTypeConvert.class)
+        @Type(convert = StringTypeConvert.class)
         private String aaa;
 
-        @TypeIndex(convert = StringTypeConvert.class)
+        @Type(convert = StringTypeConvert.class)
         private String bbb;
 
-        @TypeIndex(convert = SignedInt2integerTypeConvert.class)
+        @Type(convert = SignedInt2integerTypeConvert.class)
         private int[] ccc;
 
-        @TypeIndex(convert = StringTypeConvert.class)
+        @Type(convert = StringTypeConvert.class)
         private String[] ddd;
 
-        @TypeIndex(convert = SignedShort2shortTypeConvert.class)
+        @Type(convert = SignedShort2shortTypeConvert.class)
         private short[] eee;
     }
 
