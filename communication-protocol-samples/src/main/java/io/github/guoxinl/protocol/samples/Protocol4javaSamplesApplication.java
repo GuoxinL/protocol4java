@@ -25,7 +25,7 @@ import java.util.Arrays;
  * Create by guoxin on 2018/6/14
  */
 
-public class Protocol4javaExampleApplication {
+public class Protocol4javaSamplesApplication {
 
     /**
      * 协议请求对象

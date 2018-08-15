@@ -48,7 +48,7 @@
 |变长|_Element[`n`]_|元素`n`的数据（元素的大小长度是由元素`n`的`_Element[`i`] Length`指定的）| 
 
 ## 协议支持类型
->因为最初的设计是与C语言程序交互所以兼容了C语言中大部分常用类型
+> 因为最初的设计是与C语言程序交互所以兼容了C语言中大部分常用类型
 
 |C|Java|Java `TypeConvert` implements|
 |----|-----|:-----|
@@ -65,39 +65,123 @@
 |`unsigned int`|`int`|`UnsignedInt2integerTypeConvert`| 
 |`unsigned long long`|`long`|`UnsignedLongLong2longTypeConvert`| 
 
+> 该协议支持自定义类型只要实现`TypeConvert`配合`@Typed`注解即可，可参考以上`TypeConvert`的编写方式
+
 ## 协议架构
 ![协议架构图-V2][protocol-framework-v2]
 
 ## 流程图
-### 协议对象转换协议适配对象
-> 图1 中详细的描述了协议对象转换为协议适配对象的流程
+[流程图](FLOW.md)
 
-![协议对象转换协议适配对象v2][data-protocol-to-data-protocol-v2]
-<p align="center">图1 协议对象转换协议适配对象v2</p>
+## Samples
+```java
+package io.github.guoxinl.protocol.samples;
 
-### 协议适配对象转换协议对象
-> 图2 中详细的描述了协议适配对象转换协议对象的流程
+import io.github.guoxinl.protocol.analysis.DataProtocolCallback;
+import io.github.guoxinl.protocol.analysis.conf.convert.SignedInt2integerTypeConvert;
+import io.github.guoxinl.protocol.analysis.conf.convert.SignedShort2shortTypeConvert;
+import io.github.guoxinl.protocol.analysis.conf.convert.StringTypeConvert;
+import io.github.guoxinl.protocol.analysis.conf.register.ProtocolEntityRegister;
+import io.github.guoxinl.protocol.analysis.model.DataProtocolCallbackService;
+import io.github.guoxinl.protocol.analysis.model.anno.Callback;
+import io.github.guoxinl.protocol.analysis.model.anno.Protocol;
+import io.github.guoxinl.protocol.analysis.model.anno.Type;
+import io.github.guoxinl.protocol.analysis.model.common.ResultProtocol;
+import io.github.guoxinl.protocol.analysis.model.entity.DataProtocol;
+import io.github.guoxinl.protocol.analysis.model.entity.ProtocolEntity;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
-![协议适配对象转换协议对象v1][data-protocol-to-data-protocol-v1]
-<p align="center">图2 协议适配对象转换协议对象v1</p>
+import java.util.Arrays;
 
-### 字节流转换协议适配对象
-> 图3 中详细的描述了字节流转换协议适配对象的流程
+/**
+ * Create by guoxin on 2018/6/14
+ */
 
-![字节流转换协议适配对象v1][byte-buffer-to-data-protocol-v1]
-<p align="center">图3 字节流转换协议适配对象v1</p>
+public class Protocol4javaSamplesApplication {
 
-### 协议适配对象转换字节流
-> 图4 中详细的描述了协议适配对象转换字节流的流程
+    /**
+     * 协议请求对象
+     */
+    @Getter
+    @Setter
+    @Protocol(commandIndex = 1, version = 1)
+    @Callback(callback = ResultDataProtocolCallbackService.class)
+    public static class UpgradeProtocol implements ProtocolEntity {
 
-![协议适配对象转换字节流v1][data-protocol-to-byte-buffer-v1]
-<p align="center">图4 协议适配对象转换字节流v1</p>
+        @Type(convert = StringTypeConvert.class)
+        private String aaa;
+
+        @Type(convert = StringTypeConvert.class)
+        private String bbb;
+
+        @Type(convert = SignedInt2integerTypeConvert.class)
+        private int[] ccc;
+
+        @Type(convert = StringTypeConvert.class)
+        private String[] ddd;
+
+        @Type(convert = SignedShort2shortTypeConvert.class)
+        private short[] eee;
+    }
+
+    /**
+     * 回调业务逻辑类
+     */
+    @Slf4j
+    public static class ResultDataProtocolCallbackService implements DataProtocolCallbackService<UpgradeProtocol, ResultProtocol> {
+
+        @Override
+        public ResultProtocol call(UpgradeProtocol protocolEntity) {
+            log.info("Aaa: {}", protocolEntity.getAaa());
+            log.info("Bbb: {}", protocolEntity.getBbb());
+            log.info("Ccc: {}", Arrays.toString(protocolEntity.getCcc()));
+            log.info("Ddd: {}", Arrays.toString(protocolEntity.getDdd()));
+            log.info("Eee: {}", Arrays.toString(protocolEntity.getEee()));
+
+            // 默认协议响应对象
+            return ResultProtocol.success();
+        }
+
+    }
+
+    public static void main(String[] args) throws IllegalAccessException {
+
+        // 注册协议对象
+        ProtocolEntityRegister register = new ProtocolEntityRegister();
+        register.register(UpgradeProtocol.class);
+
+        // 实例化协议对象并赋值
+        UpgradeProtocol upgradeProtocol = new UpgradeProtocol();
+        upgradeProtocol.setEee(new short[] {1,2,3,4,5});
+        upgradeProtocol.setCcc(new int[]{5,4,3,2,1});
+        upgradeProtocol.setBbb("bbb");
+        upgradeProtocol.setDdd(new String[] {"ddd","ddd","ddd"});
+        upgradeProtocol.setAaa("aaa");
+
+        // 将协议对象转换为协议适配对象
+        DataProtocol dataProtocol1 = DataProtocol.convert(upgradeProtocol);
+
+        // 将协议适配对象转化为字节流
+        ByteBuf      buffer        = Unpooled.buffer();
+        dataProtocol1.serialization(buffer);
+        System.out.println("request：" + ByteBufUtil.hexDump(buffer));
+
+        // 模拟业务逻辑
+        DataProtocolCallback callback = new DataProtocolCallback();
+        ByteBuf              call     = callback.call(buffer);
+        System.out.println("response：" + ByteBufUtil.hexDump(call));
+
+    }
+}
+
+```
 
 ## 后续开发计划
 [开发计划](DEVELOPMENT_PLAN.md)
 
 [protocol-framework-v2]:images/protocol-framework-v2.jpg "协议架构图-V2"
-[data-protocol-to-data-protocol-v2]:images/protocol-entity-to-data-protocol-v2.jpg "协议对象转换协议适配对象-V2"
-[data-protocol-to-data-protocol-v1]:images/data-protocol-to-protocol-entity-v1.jpg "协议适配对象转换协议对象-V1"
-[byte-buffer-to-data-protocol-v1]:images/byte-buffer-to-data-protocol-v1.jpg "字节流转换协议适配对象-V1"
-[data-protocol-to-byte-buffer-v1]:images/data-protocol-to-byte-buffer-v1.jpg "协议适配对象转换字节流-V1"
