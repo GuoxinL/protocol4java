@@ -20,8 +20,8 @@
 
     <licenses>
         <license>
-            <name>GNU GENERAL PUBLIC LICENSE, Version 3</name>
-            <url>http://www.gnu.org/licenses/gpl.txt</url>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -29,6 +29,7 @@
         <developer>
             <name>Guoxin Liu</name>
             <email>lgx31@sina.com</email>
+            <url>https://github.com/GuoxinL</url>
             <timezone>+8</timezone>
             <roles>
                 <role>developer</role>
@@ -49,11 +50,13 @@
 
         <!-- no test -->
         <maven.test.skip>true</maven.test.skip>
-
+        <maven.javadoc.skip>true</maven.javadoc.skip>
         <!-- dependencies -->
         <guava.version>23.0</guava.version>
         <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
         <!-- plugin version -->
+
+        <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
     <dependencies>
         <dependency>
@@ -95,8 +98,13 @@
         </dependencies>
     </dependencyManagement>
 
+
+    <!--<profiles>-->
+    <!--<profile>-->
+    <!--<id>release</id>-->
     <build>
         <plugins>
+            <!--Compiler-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -105,21 +113,66 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+
+            <!--Javadoc-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <!-- Source -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <!-- GPG -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <!--Javadoc-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+    <!--</profile>-->
+    <!--</profiles>-->
 
     <issueManagement>
         <system>github</system>
         <url>https://github.com/GuoxinL/protocol/issues</url>
     </issueManagement>
+
     <distributionManagement>
         <repository>
             <id>snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </snapshotRepository>
     </distributionManagement>
+    <!--Deploy snapshot artifacts into repository https://oss.sonatype.org/content/repositories/snapshots-->
+    <!--Deploy release artifacts into the staging repository https://oss.sonatype.org/service/local/staging/deploy/maven2-->
+    <!--Promote staged artifacts into repository 'Releases'-->
+    <!--Download snapshot and release artifacts from group https://oss.sonatype.org/content/groups/public-->
+    <!--Download snapshot, release and staged artifacts from staging group https://oss.sonatype.org/content/groups/staging-->
 </project>

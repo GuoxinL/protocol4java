@@ -18,16 +18,22 @@ public @interface Protocol {
 
     /**
      * 协议头：命令索引
+     *
+     * @return skip
      */
     short commandIndex();
 
     /**
      * 协议版本
+     *
+     * @return skip
      */
     short version();
 
     /**
      * 描述
+     *
+     * @return skip
      */
     String description() default "";
 

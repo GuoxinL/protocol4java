@@ -34,17 +34,23 @@ public @interface Typed {
 
     /**
      * 索引
+     *
+     * @return skip
      */
     short index();
 
     /**
      * 字节数
      * 默认 {@link Typed#ELONGATE} 表示变长
+     *
+     * @return skip
      */
     byte numberOfBytes() default ELONGATE;
 
     /**
      * 描述
+     *
+     * @return skip
      */
     String description() default "Type description";
 

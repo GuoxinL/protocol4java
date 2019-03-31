@@ -10,6 +10,8 @@ package io.github.guoxinl.protocol.analysis.conf;
 public interface Builder<T> {
     /**
      * Builds and returns the object.
+     *
+     * @return builder
      */
     public T build();
 }

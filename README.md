@@ -46,7 +46,6 @@
 |变长|_Element[`i`]_|元素`i`的数据（元素的大小长度是由元素`i`的`_Element[`i`] Length`指定的）| 
 |2|_Element[`n`] Length_|元素`n`的长度（描述这次命令的版本）| 
 |变长|_Element[`n`]_|元素`n`的数据（元素的大小长度是由元素`n`的`_Element[`i`] Length`指定的）| 
-
 ## 协议支持类型
 > 因为最初的设计是与C语言程序交互所以兼容了C语言中大部分常用类型
 
@@ -66,13 +65,10 @@
 |`unsigned long long`|`long`|`UnsignedLongLong2longTypeConvert`| 
 
 > 该协议支持自定义类型只要实现`TypeConvert`配合`@Typed`注解即可，可参考以上`TypeConvert`的编写方式
-
 ## 协议架构
 ![协议架构图-V2][protocol-framework-v2]
-
 ## 流程图
 [流程图](FLOW.md)
-
 ## Samples
 ```java
 package io.github.guoxinl.protocol.samples;
@@ -184,7 +180,6 @@ public class Protocol4javaSamplesApplication {
 > 讲道理，这个协议目前暂时只能做到`Java to java`之间的传输，寻找C ,Go ,Python... 开发者一起完成这个开源项目
 
 > 所以在此向各路高手发出请帖，一起共同华山论剑，共同追逐完美的code
-
 ## 后续开发计划
 [开发计划](DEVELOPMENT_PLAN.md)
 

@@ -60,6 +60,7 @@ public class DataProtocol implements ProtocolSerialization {
      * 解析数据
      *
      * @param byteBuf 字节流
+     * @return skip
      */
     private DataProtocol(ByteBuf byteBuf) {
         analysis0(byteBuf);
@@ -69,6 +70,7 @@ public class DataProtocol implements ProtocolSerialization {
      * 协议对象转换为协议适配对象
      *
      * @param protocolEntity 协议对象
+     * @return skip
      */
     private DataProtocol(ProtocolEntity protocolEntity) {
         this(protocolEntity.getClass(), protocolEntity);
@@ -104,6 +106,7 @@ public class DataProtocol implements ProtocolSerialization {
      * 协议对象转换为协议适配对象
      *
      * @param protocolEntity 协议对象
+     * @return skip
      */
     public static DataProtocol convert(ProtocolEntity protocolEntity) {
         return new DataProtocol(protocolEntity);
@@ -112,8 +115,8 @@ public class DataProtocol implements ProtocolSerialization {
     /**
      * 解析协议对象
      *
-     * @param clazz
-     * @return
+     * @param clazz 协议对象类
+     * @return skip
      */
     public static DataProtocol convert(Class<? extends ProtocolEntity> clazz) {
         return new DataProtocol(clazz, null);
@@ -123,6 +126,7 @@ public class DataProtocol implements ProtocolSerialization {
      * 解析数据
      *
      * @param bytes 字节流
+     * @return skip
      */
     public static DataProtocol analysis(byte[] bytes) {
         return new DataProtocol(bytes);
@@ -132,6 +136,7 @@ public class DataProtocol implements ProtocolSerialization {
      * 解析数据
      *
      * @param byteBuf 字节流
+     * @return skip
      */
     public static DataProtocol analysis(ByteBuf byteBuf) {
         return new DataProtocol(byteBuf);

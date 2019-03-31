@@ -10,6 +10,8 @@ import java.lang.annotation.*;
 public @interface Callback {
     /**
      * 收到协议对应的处理回调
+     *
+     * @return skip
      */
     Class<? extends DataProtocolCallbackService> callback() default DataProtocolCallbackService.class;
 }

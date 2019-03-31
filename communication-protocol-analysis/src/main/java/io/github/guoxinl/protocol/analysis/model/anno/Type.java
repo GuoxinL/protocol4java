@@ -13,5 +13,10 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Type {
+    /**
+     * convert
+     *
+     * @return skip
+     */
     Class<? extends TypeConvert> convert() default TypeConvert.class;
 }

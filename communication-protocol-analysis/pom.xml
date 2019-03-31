@@ -30,4 +30,55 @@
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- Source -->
+            <!--source:aggregate	        Aggregate sources for all modules in an aggregator project.-->
+            <!--source:generated-test-jar	This plugin bundles all the test sources into a jar archive.-->
+            <!--source:help	                Display help information on maven-source-plugin. Call mvn source:help -Ddetail=true -Dgoal=<goal-name> to display parameter details.-->
+            <!--source:jar	                This plugin bundles all the sources into a jar archive.-->
+            <!--source:jar-no-fork	        This goal bundles all the sources into a jar archive. This goal functions the same as the jar goal but does not fork the build and is suitable for attaching to the build lifecycle.-->
+            <!--source:test-jar	            This plugin bundles all the test sources into a jar archive.-->
+            <!--source:test-jar-no-fork	    This goal bundles all the test sources into a jar archive. This goal functions the same as the test-jar goal but does not fork the build, and is suitable for attaching to the build lifecycle.-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--GnuPG-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-gpg-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>sign-artifacts</id>-->
+                        <!--<phase>verify</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>sign</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
 </project>

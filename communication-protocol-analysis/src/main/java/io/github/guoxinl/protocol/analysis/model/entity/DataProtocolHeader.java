@@ -53,8 +53,7 @@ public class DataProtocolHeader implements ProtocolSerialization {
     /**
      * 将协议对象序列化为字节流
      *
-     * @param byteBuf
-     * @return 字节流
+     * @param byteBuf 字节流
      */
     @Override
     public void serialization(ByteBuf byteBuf) {

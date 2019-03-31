@@ -16,12 +16,12 @@ public interface DataProtocolConstants {
      */
     interface Header {
         /**
-         * 命令 2个字节
+         * 命令 1个字节
          */
         int COMMAND_START      = BEGINNING_INDEX;
         int COMMAND_END        = COMMAND_START + 1;
         /**
-         * 版本 2个字节
+         * 版本 1个字节
          */
         int VERSION_START      = COMMAND_END;
         int VERSION_END        = VERSION_START + 1;
@@ -37,7 +37,7 @@ public interface DataProtocolConstants {
      */
     interface Packet {
         /**
-         * 数据码 2个字节
+         * 数据码 1个字节
          */
         int CODE_START        = BEGINNING_INDEX;
         int CODE_END          = CODE_START + 1;
@@ -47,7 +47,7 @@ public interface DataProtocolConstants {
         int TYPE_START        = CODE_END;
         int TYPE_END          = TYPE_START + 1;
         /**
-         * 数据段数量 2个字节
+         * 数据段数量 1个字节
          */
         int TOTAL_PACKET_START = TYPE_END;
         int TOTAL_PACKET_END   = TOTAL_PACKET_START + 1;

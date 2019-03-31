@@ -19,11 +19,15 @@ public @interface CodeIndex {
      * 索引
      * <p>
      * 同时该字段也表示该字段在传输时的顺序，顺序从小到大正序排列
+     *
+     * @return skip
      */
     short index();
 
     /**
      * 描述
+     *
+     * @return skip
      */
     String description();
 }

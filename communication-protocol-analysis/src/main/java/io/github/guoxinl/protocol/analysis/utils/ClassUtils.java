@@ -44,8 +44,8 @@ public class ClassUtils {
     /**
      * 获得类上的泛型类型
      *
-     * @param clazz
-     * @return
+     * @param clazz class
+     * @return skip
      */
     public static Class<?> getGenericsType(Class<?> clazz) {
         Type type = clazz.getGenericInterfaces()[0];

@@ -10,8 +10,8 @@ public interface ProtocolRegister<T> {
     /**
      * 注册协议对象
      *
-     * @param element
-     * @return
+     * @param element 协议对象Class
+     * @return this
      */
     ProtocolRegister register(T element);
 
